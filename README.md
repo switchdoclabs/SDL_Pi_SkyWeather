@@ -2,7 +2,7 @@ SkyWeather Libraries and Examples for Raspberry Pi Solar Powered Weather Station
 
 Supports SwitchDoc Labs WeatherRack PiWeather Board 
 
-Version 1.04
+Version 1.21
 
 http://www.switchdoc.com/
 
@@ -81,6 +81,16 @@ Obviously with these credentials, don't connect port 3306 to the Internet.   Cha
 NOTE:
 
 If you have a WXLink wireless transmitter installed, the software assumes you have connected your AM2315 outdoor temp/humidity sensor to the WXLink.  If you put another AM2315 on your local system, it will use those values instead of the WXLink values
+
+
+-------------------<BR>
+Set up your rc.local for start on boot<BR>
+-------------------<BR>
+
+insert the following in your /etc/rc.local before the exit 0 statement:
+
+cd /home/pi/SDL_Pi_SkyWeather <BR>
+nohup sudo python SkyWeather.py & <BR>
 
 
 

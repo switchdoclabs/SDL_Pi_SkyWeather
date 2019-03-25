@@ -87,13 +87,12 @@ class AM2315:
                 self._device.writeList(AM2315_READREG,[0x00, 0x04])
                 time.sleep(0.09)
                 tmp = self._device.readList(AM2315_READREG,8)
-                #self.temperature = (((tmp[4] & 0x7F) << 8) | tmp[5]) / 10.0
+                self.temperature = (((tmp[4] & 0x7F) << 8) | tmp[5]) / 10.0
                 self.humidity = ((tmp[2] << 8) | tmp[3]) / 10.0
                 # check for > 10.0 degrees higher
                 if (self.AM2315PreviousTemp != -1000):   # ignore first time
-                        #if (abs(self.AM2315PreviousTemp - self.temperature) > 10.0):
                         if (self.humidity <0.01 or self.humidity > 100.0):
-                            # OK, temp is bad.  Ignore
+                            # OK, humidity is bad.  Ignore
                             if (AM2315DEBUG == True):
                                 print ">>>>>>>>>>>>>"
                                 print "Bad AM2315 Humidity = ", self.temperature
@@ -101,8 +100,17 @@ class AM2315:
                                 self.badreadings = self.badreadings+1
                                 tmp = None
                         else:
-                            # Good Temperature
-                            self.AM2315PreviousTemp = self.temperature
+                            if (abs(self.temperature - self.AM2315PreviousTemp) > 10.0):
+                                # OK, temp is bad.  Ignore
+                                if (AM2315DEBUG == True):
+                                    print ">>>>>>>>>>>>>"
+                                    print "Bad AM2315 Humidity = ", self.temperature
+                                    print ">>>>>>>>>>>>>"
+                                    self.badreadings = self.badreadings+1
+                                    tmp = None
+                            else:
+                                # Good Temperature
+                                self.AM2315PreviousTemp = self.temperature
                 else:
                     # assume first is good temperature
                     self.AM2315PreviousTemp = self.temperature

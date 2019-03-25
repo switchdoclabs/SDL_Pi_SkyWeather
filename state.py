@@ -29,7 +29,8 @@ currentSeaLevel = 10
 barometricTrend = True
 pastBarometricReading = 9
 
-AirQuality_Sensor_Value = 101
+Indoor_AirQuality_Sensor_Value = 101
+Outdoor_AirQuality_Sensor_Value = 101
 
 
 
@@ -82,7 +83,9 @@ WXsolarPower = 0
 WXloadPower = 0
 WXbatteryCharge = 0
 
+# Fan State
 
+fanState = False
 
 def printState():
 
@@ -113,7 +116,8 @@ def printState():
     print "barometricTrend =",barometricTrend 
     print "pastBarometricReading = ", pastBarometricReading 
 
-    print "AirQuality_Sensor_Value = ",  AirQuality_Sensor_Value 
+    print "Outdoor_AirQuality_Sensor_Value = ",  Outdoor_AirQuality_Sensor_Value 
+    print "Indoor_AirQuality_Sensor_Value = ",  Indoor_AirQuality_Sensor_Value 
 
     print "-------------"
 
@@ -170,6 +174,8 @@ def printState():
     print "WXloadPower", WXloadPower
     print "WXbatteryCharge", WXbatteryCharge
 
+    print "-------------"
+    print "fanState = ", fanState
     print "-------------"
 
 

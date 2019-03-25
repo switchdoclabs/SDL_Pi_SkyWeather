@@ -136,7 +136,7 @@ def blynkStateUpdate():
         # do the graphs
 
 
-        val = state.AirQuality_Sensor_Value 
+        val = state.Outdoor_AirQuality_Sensor_Value 
         put_body = json.dumps([val])
         if (DEBUGBLYNK):
             print "blynkStateUpdate:Pre:put_body:",put_body

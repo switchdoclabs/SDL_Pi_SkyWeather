@@ -8,14 +8,13 @@
 #
 
 # imports
-SWVERSION = "1.18"
 # Check for user imports
 try:
 	import conflocal as config
 except ImportError:
 	import config
 
-
+config.SWVERSION = "1.21"
 
 
 import sys
@@ -58,6 +57,7 @@ sys.path.append('./SDL_Pi_HDC1000')
 sys.path.append('./SDL_Pi_AM2315')
 sys.path.append('./BME680')
 
+sys.path.append('./SDL_Pi_GrovePowerDrive')
 
 import subprocess
 import RPi.GPIO as GPIO
@@ -191,6 +191,38 @@ def togglePower(GroveSavePin):
         removePower(GroveSavePin)
         time.sleep(4.5)
         restorePower(GroveSavePin)
+
+
+
+###############
+# Fan Control
+###############
+
+import SDL_Pi_GrovePowerDrive
+
+GPIO_Pin_PowerDrive_Sig1 = 4
+GPIO_Pin_PowerDrive_Sig2 = 5
+TEMPFANTURNON = 37.0
+TEMPFANTURNOFF = 34.0
+
+myPowerDrive = SDL_Pi_GrovePowerDrive.SDL_Pi_GrovePowerDrive(GPIO_Pin_PowerDrive_Sig1, GPIO_Pin_PowerDrive_Sig2, False, False)
+
+def turnFanOn():
+   if (state.fanState == False):
+    pclogging.log(pclogging.INFO, __name__, "Turning Fan On" )
+    if (config.USEBLYNK):
+        updateBlynk.blynkStatusTerminalUpdate("Turning Fan On")
+    myPowerDrive.setPowerDrive(1, True) 
+    state.fanState = True
+
+def turnFanOff():
+   if (state.fanState == True):
+    pclogging.log(pclogging.INFO, __name__, "Turning Fan Off" )
+    if (config.USEBLYNK):
+       updateBlynk.blynkStatusTerminalUpdate("Turning Fan Off")
+    myPowerDrive.setPowerDrive(1, False) 
+    state.fanState = False
+ 
 
 ###############
 
@@ -1258,8 +1290,17 @@ def sampleWeather():
         state.currentAltitude = bmp180Altitude
         state.currentSeaLevel = bmp180SeaLevel
 
-        AirQuality_Sensor_Value = 0
-        state.AirQuality_Sensor_Value = AirQuality_Sensor_Value 
+        Indoor_AirQuality_Sensor_Value = 0
+        Outdoor_AirQuality_Sensor_Value = 0
+        state.Indoor_AirQuality_Sensor_Value = Indoor_AirQuality_Sensor_Value 
+        state.Outdoor_AirQuality_Sensor_Value = Outdoor_AirQuality_Sensor_Value 
+
+        # check for turn fan on
+        if (state.currentInsideTemperature > TEMPFANTURNON):
+            turnFanOn()
+        # check for turn fan off
+        if (state.currentInsideTemperature < TEMPFANTURNOFF):
+            turnFanOff()
 
 	# turn I2CBus 0 on
  	if (config.TCA9545_I2CMux_Present):
@@ -1728,7 +1769,7 @@ def checkForButtons():
 
 
 print  ""
-print "GroveWeatherPi Solar Powered Weather Station Version "+SWVERSION+" - SwitchDoc Labs"
+print "GroveWeatherPi Solar Powered Weather Station Version "+config.SWVERSION+" - SwitchDoc Labs"
 print ""
 print ""
 print "Program Started at:"+ time.strftime("%Y-%m-%d %H:%M:%S")
@@ -1779,15 +1820,15 @@ rain60Minutes = 0.0
 
 as3935Interrupt = False
 
-pclogging.log(pclogging.INFO, __name__, "GroveWeatherPi Startup Version"+SWVERSION )
+pclogging.log(pclogging.INFO, __name__, "GroveWeatherPi Startup Version"+config.SWVERSION )
 
 if (config.USEBLYNK):
-     updateBlynk.blynkEventUpdate("SW Startup Version "+SWVERSION)
-     updateBlynk.blynkStatusTerminalUpdate("SW Startup Version "+SWVERSION) 
+     updateBlynk.blynkEventUpdate("SW Startup Version "+config.SWVERSION)
+     updateBlynk.blynkStatusTerminalUpdate("SW Startup Version "+config.SWVERSION) 
 
 subjectText = "The "+ config.STATIONDESCRIPT + " SkyWeather Raspberry Pi has #rebooted."
 ipAddress = commands.getoutput('hostname -I')
-bodyText = "SkyWeather Version "+SWVERSION+ " Startup \n"+ipAddress+"\n"
+bodyText = "SkyWeather Version "+config.SWVERSION+ " Startup \n"+ipAddress+"\n"
 if (config.SunAirPlus_Present):
 	sampleSunAirPlus()
 	bodyText = bodyText + "\n" + "BV=%0.2fV/BC=%0.2fmA/SV=%0.2fV/SC=%0.2fmA" % (batteryVoltage, batteryCurrent, solarVoltage, solarCurrent)
@@ -1800,6 +1841,9 @@ sendemail.sendEmail("test", bodyText, subjectText ,config.notifyAddress,  config
 # Initial Sample And Display
 sampleAndDisplay()
 
+# test SkyWeather
+
+#SkyCamera.sendSkyWeather()
 # Set up scheduler
 
 scheduler = BackgroundScheduler()
@@ -1852,8 +1896,8 @@ scheduler.add_job(doAllGraphs.doAllGraphs, 'interval', seconds=15*60)
 # every 30 minutes, check wifi connections 
 scheduler.add_job(WLAN_check, 'interval', seconds=30*60)
 
-# every 48 hours at 00:04, reboot
-#scheduler.add_job(rebootPi, 'cron', day='2-30/2', hour=0, minute=4, args=["48 Hour Reboot"]) 
+# every 5 days at 00:04, reboot
+scheduler.add_job(rebootPi, 'cron', day='5-30/5', hour=0, minute=4, args=["5 day Reboot"]) 
 	
 #check for Barometric Trend (every 15 minutes)
 scheduler.add_job(barometricTrend, 'interval', seconds=15*60)

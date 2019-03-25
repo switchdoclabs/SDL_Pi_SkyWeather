@@ -8,6 +8,13 @@
 
 SWDEBUG = False
 
+SWVERSION = "0.0"
+import uuid 
+  
+# printing the value of unique MAC 
+# address using uuid and getnode() function  
+MACADDRESS = hex(uuid.getnode()) 
+
 mailUser = "yourusename"
 mailPassword = "yourmailpassword"
 
@@ -35,10 +42,13 @@ runLEDs = False
 
 USEWEATHERSTEM = False
 STATIONID = "SkyWeatherXXXX"
+STATIONMAC = MACADDRESS
 STATIONLOCATIONCITY = ""
 STATIONLOCATIONSTATE = ""
 STATIONLOCATIONCOUNTRY = ""
-STATIONLATLONG = ""
+STATIONLAT = ""
+STATIONLONG = ""
+
 STATIONDESCRIPT = ""
 
 # WeatherUnderground Station
