@@ -70,6 +70,40 @@ class AM2315:
                          crc = crc >> 1
         return crc
 
+    # fast read for device detection without faults
+    def _fast_read_data(self):   
+
+        try:
+            # WAKE UP
+            self._device.write8(AM2315_READREG,0x00)
+        except:
+            time.sleep(0.09)
+
+        # TELL THE DEVICE WE WANT 4 BYTES OF DATA
+        self._device.writeList(AM2315_READREG,[0x00, 0x04])
+        time.sleep(0.09)
+        tmp = self._device.readList(AM2315_READREG,8)
+        self.temperature = (((tmp[4] & 0x7F) << 8) | tmp[5]) / 10.0
+        self.humidity = ((tmp[2] << 8) | tmp[3]) / 10.0
+
+        self.crc = ((tmp[7] << 8) | tmp[6]) 
+        # Verify CRC here
+        # force CRC error with the next line
+        #tmp[0] = tmp[0]+1
+        t = bytearray([tmp[0], tmp[1], tmp[2], tmp[3], tmp[4], tmp[5]])
+        c = self.verify_crc(t)
+
+        if (AM2315DEBUG == True):
+            print "Fast Read AM2315temperature=",self.temperature
+            print "Fast Read AM2315humdity=",self.humidity
+            print "Fast Read AM2315crc=",self.crc
+            print "Fast Read AM2315c=",c
+
+        if self.crc != c:
+            if (AM2315DEBUG == True):
+                print "AM2314 BAD CRC"
+            self.crc = -1
+
 
     def _read_data(self):
         count = 0
@@ -162,6 +196,10 @@ class AM2315:
         else:
             self.goodreads = self.goodreads+1
 
+    def fast_read_temperature(self):
+        self._fast_read_data()
+        return self.temperature
+
     def read_temperature(self):
         self._read_data()
         return self.temperature
@@ -176,6 +214,10 @@ class AM2315:
 
     def read_humidity_temperature_crc(self):
         self._read_data()
+        return (self.humidity, self.temperature, self.crc)
+
+    def fast_read_humidity_temperature_crc(self):
+        self._fast_read_data()
         return (self.humidity, self.temperature, self.crc)
 
     def read_status_info(self):
