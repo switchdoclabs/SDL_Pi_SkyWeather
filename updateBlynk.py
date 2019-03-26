@@ -166,9 +166,25 @@ def blynkStateUpdate():
         put_body = json.dumps([tval])
         r = requests.put(config.BLYNK_URL+config.BLYNK_AUTH+'/update/V21', data=put_body, headers=put_header)
 
+        val = util.returnTemperatureCF(state.currentInsideTemperature)
+        tval = "{0:0.1f}".format(val) 
+        put_body = json.dumps([val])
+        r = requests.put(config.BLYNK_URL+config.BLYNK_AUTH+'/update/V120', data=put_body, headers=put_header)
+
         val = state.currentInsideHumidity 
         put_body = json.dumps(["{0:0.1f}%".format(val)])
         r = requests.put(config.BLYNK_URL+config.BLYNK_AUTH+'/update/V13', data=put_body, headers=put_header)
+
+        val = state.currentInsideHumidity 
+        put_body = json.dumps(["{0:0.1f}".format(val)])
+        r = requests.put(config.BLYNK_URL+config.BLYNK_AUTH+'/update/V121', data=put_body, headers=put_header)
+
+        if (state.fanState == False):
+            val = 0
+        else:
+            val = 1
+        put_body = json.dumps([val])
+        r = requests.put(config.BLYNK_URL+config.BLYNK_AUTH+'/update/V122', data=put_body, headers=put_header)
 
 
         #wind
@@ -267,6 +283,16 @@ def blynkStateUpdate():
         put_body = json.dumps([val])
         r = requests.put(config.BLYNK_URL+config.BLYNK_AUTH+'/update/V56', data=put_body, headers=put_header)
         
+        
+        val = "{0:0.1f}".format(state.batteryCharge) 
+        put_body = json.dumps([val])
+        r = requests.put(config.BLYNK_URL+config.BLYNK_AUTH+'/update/V127', data=put_body, headers=put_header)
+        
+        delta = util.returnTemperatureCF(state.currentInsideTemperature)- util.returnTemperatureCF(state.currentOutsideTemperature)
+        
+        val = "{0:0.1f}".format(delta)) 
+        put_body = json.dumps([val])
+        r = requests.put(config.BLYNK_URL+config.BLYNK_AUTH+'/update/V128', data=put_body, headers=put_header)
         
         
         # LEDs 
