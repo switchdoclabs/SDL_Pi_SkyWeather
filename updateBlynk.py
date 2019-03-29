@@ -290,7 +290,7 @@ def blynkStateUpdate():
         
         delta = util.returnTemperatureCF(state.currentInsideTemperature)- util.returnTemperatureCF(state.currentOutsideTemperature)
         
-        val = "{0:0.1f}".format(delta)) 
+        val = "{0:0.1f}".format(delta) 
         put_body = json.dumps([val])
         r = requests.put(config.BLYNK_URL+config.BLYNK_AUTH+'/update/V128', data=put_body, headers=put_header)
         
