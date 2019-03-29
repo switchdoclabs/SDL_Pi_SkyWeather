@@ -79,7 +79,7 @@ def sendSkyPictureToWeatherStem():
 def sendSkyWeather():
 
     # defining the api-endpoint  
-    API_ENDPOINT = "https://api.weatherstem.com/api/util"
+    API_ENDPOINT = "https://skyweather.weatherstem.com/"
      
     # your API key here 
     API_KEY = "3gj8i0rm"
@@ -102,7 +102,6 @@ def sendSkyWeather():
 
     data = {
                 "api_key":API_KEY, 
-                "method": "social_sky_weather_upload",
                 "SkyWeatherVersion": config.SWVERSION,
 
 	"device":{
@@ -345,7 +344,7 @@ def sendSkyWeather():
 	"cameras":[
 		{
 			"name":"Sky Camera",
-			"image":"xxxyyyxxxencode64"
+			"image": encoded_string
 		}
 		
 	]
@@ -355,11 +354,11 @@ def sendSkyWeather():
   
     # sending post request and saving response as response object 
     r = requests.post(url = API_ENDPOINT, json = data) 
-    print data 
+    #print data 
     # extracting response text  
     pastebin_url = r.text 
     if (config.SWDEBUG):
-        print("The pastebin URL is:%s"%pastebin_url) 
+        print("The pastebin URL is (r.text):%s"%pastebin_url) 
 
 
 

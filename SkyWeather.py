@@ -14,7 +14,7 @@ try:
 except ImportError:
 	import config
 
-config.SWVERSION = "022"
+config.SWVERSION = "023"
 
 
 import sys
@@ -79,6 +79,8 @@ if (config.enable_MySQL_Logging == True):
 import picamera
 
 import SkyCamera
+
+import DustSensor
 
 
 
@@ -442,35 +444,6 @@ except:
 block1 = ""
 block2 = ""
 
-'''
-###############
-
-# Sunlight SI1145 Sensor Setup
-
-################
-# turn I2CBus 3 on
-if (config.TCA9545_I2CMux_Present):
-	 tca9545.write_control_register(TCA9545_CONFIG_BUS3)
-
-try:
-	Sunlight_Sensor = SDL_Pi_SI1145.SDL_Pi_SI1145(indoor=0)
-        while (True):
-            visible = Sunlight_Sensor.readVisible() 
-	    print "visible=", visible
-            config.Sunlight_Present = True
-            vis = Sunlight_Sensor.readVisible()
-       	    IR = Sunlight_Sensor.readIR()
-       	    UV = Sunlight_Sensor.readUV()
-       	    IR_Lux = SI1145Lux.SI1145_IR_to_Lux(IR)
-       	    vis_Lux = SI1145Lux.SI1145_VIS_to_Lux(vis)
-       	    uvIndex = UV / 100.0
-            time.sleep(1.0)
-
-
-
-except:
-        config.Sunlight_Present = False
-'''
 
 ################
 # DS3231/AT24C32 Setup
@@ -604,7 +577,8 @@ def process_as3935_interrupt():
             updateBlynk.blynkStatusTerminalUpdate("Lightning Detected "  + str(distance) + "km away.")
 
 	pclogging.log(pclogging.INFO, __name__, "Lightning Detected "  + str(distance) + "km away. (%s)" % now)
-	sendemail.sendEmail("test", "GroveWeatherPi Lightning Detected\n", as3935LastStatus, config.textnotifyAddress,  config.fromAddress, "");
+        if (config.enableText):
+	    sendemail.sendEmail("test", config.STATIONID + " Lightning Detected\n", as3935LastStatus, config.textnotifyAddress,  config.fromAddress, "");
         # now set LED parameters
         state.currentAs3935LastLightningTimeStamp = time.time()
     
@@ -636,9 +610,10 @@ if (config.Lightning_Mode == True):
 
         as3935 = RPi_AS3935(address=0x02, bus=1)
 
+        IndoorOutdoor = True # True means outdoor
         try:
 
-                as3935.set_indoors(False)
+                as3935.set_indoors(IndoorOutdoor)
                 config.AS3935_Present = True
                 print "as3935 present at 0x02"
 		#process_as3935_interrupt()
@@ -651,7 +626,7 @@ if (config.Lightning_Mode == True):
 
         	try:
 
-                	as3935.set_indoors(False)
+                	as3935.set_indoors(IndoorOutdoor)
                 	config.AS3935_Present = True
                 	#print "as3935 present"
         	except IOError as e:
@@ -985,7 +960,7 @@ def readWXLink(block1, block2):
 # write SunAirPlus stats out to file
 def writeSunAirPlusStats():
 
-        f = open("/home/pi/SDL_Pi_GroveWeatherPi/state/SunAirPlusStats.txt", "w")
+        f = open("/home/pi/SDL_Pi_SkyWeather/state/SunAirPlusStats.txt", "w")
 	f.write(str(batteryVoltage) + '\n')
 	f.write(str(batteryCurrent ) + '\n')
 	f.write(str(solarVoltage) + '\n')
@@ -1001,7 +976,7 @@ def writeSunAirPlusStats():
 # write weather stats out to file
 def writeWeatherStats():
 
-        f = open("/home/pi/SDL_Pi_GroveWeatherPi/state/WeatherStats.txt", "w")
+        f = open("/home/pi/SDL_Pi_SkyWeather/state/WeatherStats.txt", "w")
 	f.write(str(totalRain) + '\n') 
 	f.write(str(as3935LightningCount) + '\n')
 	f.write(str(as3935LastInterrupt) + '\n')
@@ -1290,10 +1265,6 @@ def sampleWeather():
         state.currentAltitude = bmp180Altitude
         state.currentSeaLevel = bmp180SeaLevel
 
-        Indoor_AirQuality_Sensor_Value = 0
-        Outdoor_AirQuality_Sensor_Value = 0
-        state.Indoor_AirQuality_Sensor_Value = Indoor_AirQuality_Sensor_Value 
-        state.Outdoor_AirQuality_Sensor_Value = Outdoor_AirQuality_Sensor_Value 
 
         # check for turn fan on
         if (state.currentInsideTemperature > TEMPFANTURNON):
@@ -1592,7 +1563,7 @@ def patTheDog():
 def shutdownPi(why):
 
    pclogging.log(pclogging.INFO, __name__, "Pi Shutting Down: %s" % why)
-   sendemail.sendEmail("test", "GroveWeatherPi Shutting down:"+ why, "The GroveWeatherPi Raspberry Pi shutting down.", config.notifyAddress,  config.fromAddress, "");
+   sendemail.sendEmail("test", "SkyWeather Shutting down:"+ why, "The SkyWeather Raspberry Pi shutting down.", config.notifyAddress,  config.fromAddress, "");
    sys.stdout.flush()
    time.sleep(10.0)
 
@@ -1758,7 +1729,8 @@ def checkForButtons():
     if ((state.runOLED == False) and (config.OLED_Originally_Present == True)):
         reinitializeOLED = True
 
-    updateBlynk.blynkStatusUpdate()
+    if (config.USEBLYNK):
+        updateBlynk.blynkStatusUpdate()
 
     if ((state.runOLED == True) and (reinitializeOLED == True)):
         I2C_Lock.acquire()
@@ -1769,7 +1741,7 @@ def checkForButtons():
 
 
 print  ""
-print "GroveWeatherPi Solar Powered Weather Station Version "+config.SWVERSION+" - SwitchDoc Labs"
+print "SkyWeather Solar Powered Weather Station Version "+config.SWVERSION+" - SwitchDoc Labs"
 print ""
 print ""
 print "Program Started at:"+ time.strftime("%Y-%m-%d %H:%M:%S")
@@ -1798,6 +1770,7 @@ print returnStatusLine("OLED",config.OLED_Present)
 print returnStatusLine("SunAirPlus",config.SunAirPlus_Present)
 print returnStatusLine("SI1145 Sun Sensor",config.Sunlight_Present)
 print returnStatusLine("TSL2591 Sun Sensor",config.TSL2591_Present)
+print returnStatusLine("DustSensor",config.DustSensor_Present)
 print returnStatusLine("WXLink",config.WXLink_Present)
 print
 print returnStatusLine("UseBlynk",config.USEBLYNK)
@@ -1820,7 +1793,7 @@ rain60Minutes = 0.0
 
 as3935Interrupt = False
 
-pclogging.log(pclogging.INFO, __name__, "GroveWeatherPi Startup Version"+config.SWVERSION )
+pclogging.log(pclogging.INFO, __name__, "SkyWeather Startup Version"+config.SWVERSION )
 
 if (config.USEBLYNK):
      updateBlynk.blynkEventUpdate("SW Startup Version "+config.SWVERSION)
@@ -1902,10 +1875,12 @@ scheduler.add_job(rebootPi, 'cron', day='5-30/5', hour=0, minute=4, args=["5 day
 #check for Barometric Trend (every 15 minutes)
 scheduler.add_job(barometricTrend, 'interval', seconds=15*60)
 
-
+if (config.DustSensor_Present):
+    scheduler.add_job(DustSensor.read_AQI, 'interval', seconds=60*15)
+    
 # sky camera
 if (config.Camera_Present):
-    scheduler.add_job(SkyCamera.takeSkyPicture, 'interval', seconds=60*15)
+    scheduler.add_job(SkyCamera.sendSkyWeather, 'interval', seconds=60*15)
 
 
 

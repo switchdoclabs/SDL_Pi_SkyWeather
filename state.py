@@ -31,6 +31,7 @@ pastBarometricReading = 9
 
 Indoor_AirQuality_Sensor_Value = 101
 Outdoor_AirQuality_Sensor_Value = 101
+Hour24_Outdoor_AirQuality_Sensor_Value = 101
 
 
 
@@ -117,6 +118,7 @@ def printState():
     print "pastBarometricReading = ", pastBarometricReading 
 
     print "Outdoor_AirQuality_Sensor_Value = ",  Outdoor_AirQuality_Sensor_Value 
+    print "Hour24_Outdoor_AirQuality_Sensor_Value = ",  Hour24_Outdoor_AirQuality_Sensor_Value 
     print "Indoor_AirQuality_Sensor_Value = ",  Indoor_AirQuality_Sensor_Value 
 
     print "-------------"

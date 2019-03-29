@@ -4,7 +4,7 @@
 # configuration file - contains customization for exact system
 #
 
-# it is a good idea to copy this file into a file called "conflocal.py" and edit that instead of this one.  This file is wiped out if you update GroveWeatherPi.
+# it is a good idea to copy this file into a file called "conflocal.py" and edit that instead of this one.  This file is wiped out if you update SkyWeather.
 
 SWDEBUG = False
 
@@ -22,6 +22,7 @@ notifyAddress ="you@example.com"
 
 fromAddress = "yourfromaddress@example.com"
 
+enableText = False
 textnotifyAddress = "yourphonenumber@yourprovider"
 
 #MySQL Logging and Password Information
@@ -29,7 +30,7 @@ textnotifyAddress = "yourphonenumber@yourprovider"
 enable_MySQL_Logging = False
 MySQL_Password = "password"
 
-# modify this IP to enable WLAN operating detection  - search for WLAN_check in GroveWeatherPi.py
+# modify this IP to enable WLAN operating detection  - search for WLAN_check in SkyWeather.py
 enable_WLAN_Detection = True
 PingableRouterAddress = "192.168.1.1"
 
@@ -92,6 +93,7 @@ OLED_Originally_Present = False
 WXLink_Present = False
 Sunlight_Present = False
 TSL2591_Present = False
+DustSensor_Present = True
 
 # set Sunlight High Gain (indoors - 1) or Low Gain (outdoors - 0)
 Sunlight_Gain = 0
@@ -103,3 +105,5 @@ WXLInk_LastMessageID = 0
 
 # Pin definitions
 pixelPin = 21
+
+DustSensorPin = 19
