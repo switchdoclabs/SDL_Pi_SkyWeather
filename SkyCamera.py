@@ -33,7 +33,8 @@ def takeSkyPicture():
     camera.capture('static/skycamera.jpg')
     camera.close()
 
-    sendSkyPictureToWeatherStem()
+#    sendSkyPictureToWeatherStem()
+    sendSkyWeather()
 
 
 import base64

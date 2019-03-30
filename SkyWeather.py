@@ -226,6 +226,10 @@ def turnFanOff():
     state.fanState = False
  
 
+turnFanOff()
+
+
+
 ###############
 
 # TSL2591 Sunlight Sensor Setup
@@ -1746,6 +1750,14 @@ print ""
 print "Program Started at:"+ time.strftime("%Y-%m-%d %H:%M:%S")
 print ""
 
+###############
+#  Turn Dust Sensor Off
+################
+
+GPIO.setup(config.DustSensorPowerPin, GPIO.OUT)
+GPIO.output(config.DustSensorPowerPin, False)
+
+
 # Initialize Variables
 bmp180Temperature =  0
 bmp180Pressure = 0 
@@ -1879,7 +1891,7 @@ if (config.DustSensor_Present):
     
 # sky camera
 if (config.Camera_Present):
-    scheduler.add_job(SkyCamera.sendSkyWeather, 'interval', seconds=60*15)
+    scheduler.add_job(SkyCamera.takeSkyPicture, 'interval', seconds=60*15)
 
 
 

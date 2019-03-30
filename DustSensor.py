@@ -11,7 +11,9 @@ import time
 import pigpio
 import SDL_Pi_DustSensor
 
+import RPi.GPIO as GPIO
 
+GPIO.setmode(GPIO.BCM)
 # Check for user imports
 try:
             import conflocal as config
@@ -20,12 +22,27 @@ except ImportError:
 
 import state
 
+def powerOnDustSensor():
+        GPIO.setup(config.DustSensorPowerPin, GPIO.OUT)
+        GPIO.output(config.DustSensorPowerPin, True)
+        time.sleep(1)
+
+def powerOffDustSensor():
+        GPIO.setup(config.DustSensorPowerPin, GPIO.OUT)
+        GPIO.output(config.DustSensorPowerPin, False)
+        time.sleep(1)
+
+
 def read_AQI():
 
       if (config.SWDEBUG):
           print ("###############")
           print ("Reading AQI")
           print ("###############")
+
+      if (config.SWDEBUG):
+          print ("Turning Power On")
+      powerOnDustSensor()
 
       pi = pigpio.pi() # Connect to Pi.
    
@@ -62,5 +79,9 @@ def read_AQI():
 
       state.Outdoor_AirQuality_Sensor_Value = int(aqi)
       pi.stop() # Disconnect from Pi.
+
+      if (config.SWDEBUG):
+          print ("Turning Dust Sensor Power Off")
+      powerOffDustSensor()
 
 

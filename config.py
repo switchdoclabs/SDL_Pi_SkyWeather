@@ -107,7 +107,9 @@ WXLInk_LastMessageID = 0
 pixelPin = 21
 
 DustSensorPin = 19
+DustSensorPowerPin = 26
 
+# for fan
 GPIO_Pin_PowerDrive_Sig1 = 5
 GPIO_Pin_PowerDrive_Sig2 = 6
 
