@@ -2,7 +2,7 @@ SkyWeather Libraries and Examples for Raspberry Pi Solar Powered Weather Station
 
 Supports SwitchDoc Labs WeatherRack PiWeather Board 
 
-Version V023 
+Version V025 
 
 http://www.switchdoc.com/
 

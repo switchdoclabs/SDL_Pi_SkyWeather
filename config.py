@@ -107,3 +107,8 @@ WXLInk_LastMessageID = 0
 pixelPin = 21
 
 DustSensorPin = 19
+
+GPIO_Pin_PowerDrive_Sig1 = 5
+GPIO_Pin_PowerDrive_Sig2 = 6
+
+WATCHDOGTRIGGER = 4

@@ -14,7 +14,7 @@ try:
 except ImportError:
 	import config
 
-config.SWVERSION = "023"
+config.SWVERSION = "025"
 
 
 import sys
@@ -202,12 +202,12 @@ def togglePower(GroveSavePin):
 
 import SDL_Pi_GrovePowerDrive
 
-GPIO_Pin_PowerDrive_Sig1 = 4
-GPIO_Pin_PowerDrive_Sig2 = 5
+config.GPIO_Pin_PowerDrive_Sig1 = 4
+config.GPIO_Pin_PowerDrive_Sig2 = 5
 TEMPFANTURNON = 37.0
 TEMPFANTURNOFF = 34.0
 
-myPowerDrive = SDL_Pi_GrovePowerDrive.SDL_Pi_GrovePowerDrive(GPIO_Pin_PowerDrive_Sig1, GPIO_Pin_PowerDrive_Sig2, False, False)
+myPowerDrive = SDL_Pi_GrovePowerDrive.SDL_Pi_GrovePowerDrive(config.GPIO_Pin_PowerDrive_Sig1, config.GPIO_Pin_PowerDrive_Sig2, False, False)
 
 def turnFanOn():
    if (state.fanState == False):
@@ -1543,7 +1543,6 @@ def writePowerRecord():
 		del con
 
 
-WATCHDOGTRIGGER = 17
 
 
 
@@ -1552,11 +1551,11 @@ def patTheDog():
 
 	# pat the dog
 	print "------Patting The Dog------- "
-        GPIO.setup(WATCHDOGTRIGGER, GPIO.OUT)
-        GPIO.output(WATCHDOGTRIGGER, False)
+        GPIO.setup(config.WATCHDOGTRIGGER, GPIO.OUT)
+        GPIO.output(config.WATCHDOGTRIGGER, False)
         time.sleep(0.2)
-        GPIO.output(WATCHDOGTRIGGER, True)
-        GPIO.setup(WATCHDOGTRIGGER, GPIO.IN)
+        GPIO.output(config.WATCHDOGTRIGGER, True)
+        GPIO.setup(config.WATCHDOGTRIGGER, GPIO.IN)
 
 
 	
