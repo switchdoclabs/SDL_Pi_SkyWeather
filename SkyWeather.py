@@ -14,7 +14,7 @@ try:
 except ImportError:
 	import config
 
-config.SWVERSION = "025"
+config.SWVERSION = "026"
 
 
 import sys
@@ -202,8 +202,6 @@ def togglePower(GroveSavePin):
 
 import SDL_Pi_GrovePowerDrive
 
-config.GPIO_Pin_PowerDrive_Sig1 = 4
-config.GPIO_Pin_PowerDrive_Sig2 = 5
 TEMPFANTURNON = 37.0
 TEMPFANTURNOFF = 34.0
 
@@ -1023,11 +1021,6 @@ def sampleWeather():
         global am2315
 
 
-        # blink GPIO LED when it's run
-        GPIO.setup(SUNAIRLED, GPIO.OUT)
-        GPIO.output(SUNAIRLED, True)
-        time.sleep(0.2)
-        GPIO.output(SUNAIRLED, False)
 
 	print "----------------- "
 	print " Weather Sampling" 
