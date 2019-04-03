@@ -392,8 +392,6 @@ except:
 # GPIO Numbering Mode GPIO.BCM
 #
 
-anemometerPin = 20
-rainPin = 13
 
 # constants
 
@@ -408,7 +406,7 @@ SDL_MODE_DELAY = 1
 # turn I2CBus 0 on
 if (config.TCA9545_I2CMux_Present):
 	tca9545.write_control_register(TCA9545_CONFIG_BUS0)
-weatherStation = SDL_Pi_WeatherRack.SDL_Pi_WeatherRack(anemometerPin, rainPin, 0,0, SDL_MODE_I2C_ADS1015)
+weatherStation = SDL_Pi_WeatherRack.SDL_Pi_WeatherRack(config.anemometerPin, config.rainPin, 0,0, SDL_MODE_I2C_ADS1015)
 
 weatherStation.setWindMode(SDL_MODE_SAMPLE, 5.0)
 #weatherStation.setWindMode(SDL_MODE_DELAY, 5.0)

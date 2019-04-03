@@ -109,6 +109,10 @@ pixelPin = 21
 DustSensorPin = 19
 DustSensorPowerPin = 26
 
+#WeatherRack 
+anemometerPin = 20
+rainPin = 13
+
 
 AM2315GSPIN = 6
 
