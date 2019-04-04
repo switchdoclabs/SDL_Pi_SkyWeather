@@ -2,11 +2,12 @@ SkyWeather Libraries and Examples for Raspberry Pi Solar Powered Weather Station
 
 Supports SwitchDoc Labs WeatherRack PiWeather Board 
 
-Version V026 
+Version V027 
 
 http://www.switchdoc.com/
 
-March 31, 2019:  Version 026 - Fixed Pins for Optional Fan On/Off
+April 3, 2019:   Version 027 - Mod AS3935 Interrupt, added AQI to Database
+March 31, 2019:  Version 026 - Fixed Pins for Optional Fan On/Off<BR>
 
 -----------------
 Install this for smbus:
