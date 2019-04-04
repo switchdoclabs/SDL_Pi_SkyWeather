@@ -88,6 +88,7 @@ CREATE TABLE IF NOT EXISTS `WeatherData` (
   `outsideHumidity` float NOT NULL,
   `insideTemperature` float NOT NULL,
   `insideHumidity` float NOT NULL,
+  `AQI` float NOT NULL,
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=latin1 COMMENT='Weather Data' AUTO_INCREMENT=15808 ;
 
