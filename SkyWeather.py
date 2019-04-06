@@ -14,7 +14,7 @@ try:
 except ImportError:
 	import config
 
-config.SWVERSION = "027"
+config.SWVERSION = "028"
 
 
 import sys
@@ -82,7 +82,7 @@ import SkyCamera
 
 import DustSensor
 
-
+import util
 
 ################
 # Device Present State Variables
@@ -414,37 +414,48 @@ weatherStation.setWindMode(SDL_MODE_SAMPLE, 5.0)
 
 
 ################
-
-# WXLink Test Setup
-WXLinkResetPin = 12
-
-def resetWXLink():
-	
-	print "WXLink Reset"
-        pclogging.log(pclogging.INFO, __name__, "WXLink RX Reset" )
-	# Reset is connected to D12 on the Pi2Grover	
-        
-        GPIO.setup(WXLinkResetPin, GPIO.OUT)
-        GPIO.output(WXLinkResetPin, False)
-        time.sleep(0.2)
-        GPIO.output(WXLinkResetPin, True)
-        GPIO.setup(WXLinkResetPin, GPIO.IN)
- 	time.sleep(2.0)		
+# WXLink Setup
 
 #resetWXLink()
+sys.path.append('./pyRFM')
+import lib as pyrfm
 
-WXLink = smbus.SMBus(1)
+import readLoRa
+
 try:
-        data1 = WXLink.read_i2c_block_data(0x08, 0)
+        
+	
+
+    conf={
+	'll':{
+		'type':'rfm95'
+	},
+	'pl':{
+		'type':	'serial_seed',
+		'port':	'/dev/ttyS0'
+	}
+    }
+
+
+    state.ll=pyrfm.getLL(conf)
+
+    if state.ll.setOpModeSleep(True,True):
+	state.ll.setFiFo()
+	state.ll.setOpModeIdle()
+        state.ll.setModemConfig('Bw31_25Cr48Sf512');
+	#state.ll.setModemConfig('Bw125Cr45Sf128');
+	#state.ll.setPreambleLength(8)
+	state.ll.setFrequency(434.0)
+	state.ll.setTxPower(13)
+	
+        print('HW-Version: ', state.ll.getVersion())
         config.WXLink_Present = True
 
-	# OK, now export i2c to so we can determine if we need to reset WXLink
-   	os.system("echo '3' > /sys/class/gpio/export")
 except:
         config.WXLink_Present = False
 
-block1 = ""
-block2 = ""
+state.block1 = ""
+state.block2 = ""
 
 
 ################
@@ -744,220 +755,7 @@ except:
 # Main Program
 
 
-def returnPercentLeftInBattery(currentVoltage, maxVolt):
 
-        scaledVolts = currentVoltage / maxVolt
-
-        if (scaledVolts > 1.0):
-                scaledVolts = 1.0
-
-
-        if (scaledVolts > .9686):
-                returnPercent = 10*(1-(1.0-scaledVolts)/(1.0-.9686))+90
-                return returnPercent
-
-        if (scaledVolts > 0.9374):
-                returnPercent = 10*(1-(0.9686-scaledVolts)/(0.9686-0.9374))+80
-                return returnPercent
-
-
-        if (scaledVolts > 0.9063):
-                returnPercent = 30*(1-(0.9374-scaledVolts)/(0.9374-0.9063))+50
-                return returnPercent
-
-        if (scaledVolts > 0.8749):
-                returnPercent = 20*(1-(0.8749-scaledVolts)/(0.9063-0.8749))+11
-
-                return returnPercent
-
-
-        if (scaledVolts > 0.8437):
-                returnPercent = 15*(1-(0.8437-scaledVolts)/(0.8749-0.8437))+1
-                return returnPercent
-
-
-        if (scaledVolts > 0.8126):
-                returnPercent = 7*(1-(0.8126-scaledVolts)/(0.8437-0.8126))+2
-                return returnPercent
-
-
-
-        if (scaledVolts > 0.7812):
-                returnPercent = 4*(1-(0.7812-scaledVolts)/(0.8126-0.7812))+1
-                return returnPercent
-
-        return 0
-
-
-import crcpython2
-
-# read WXLink and return list to set variables
-crcCalc = crcpython2.CRCCCITT(version='XModem')
-
-
-
-def readWXLink(block1, block2):
-
-                oldblock1 = block1
-                oldblock2 = block2
-
-                try:
-                	print "-----------"
-                        block1 = WXLink.read_i2c_block_data(0x08, 0);
-			print "block1=", block1
-                        block2 = WXLink.read_i2c_block_data(0x08, 1);
-			block1_orig = block1
-			block2_orig = block2
-			print "block2=", block2
-                        stringblock1 = ''.join(chr(e) for e in block1)
-                        stringblock2 = ''.join(chr(e) for e in block2[0:27]) 
-
-                	print "-----------"
-                	print "block 1"
-                	print ''.join('{:02x}'.format(x) for x in block1)
-                	block1 = bytearray(block1)
-                	print "block 2"
-                	block2 = bytearray(block2)
-                	print ''.join('{:02x}'.format(x) for x in block2)
-                	print "-----------"
-                except:
-                        print "WXLink Read failed - Old Data Kept"
-                        block1 = oldblock1
-                        block2 = oldblock2
-			block1_orig = block1
-			block2_orig = block2
-			print "b1, b2=", block1, block2
-                        stringblock1 = ''.join(chr(e) for e in block1)
-                        stringblock2 = ''.join(chr(e) for e in block2[0:27]) 
-
-                	print "-----------"
-                	print "block 1"
-                	print ''.join('{:02x}'.format(x) for x in block1)
-                	block1 = bytearray(block1)
-                	print "block 2"
-                	block2 = bytearray(block2)
-                	print ''.join('{:02x}'.format(x) for x in block2)
-                	print "-----------"
-
-		if ((len(block1) > 0) and (len(block2) > 0)):
-			# check crc for errors - don't update data if crc is bad
-		
-			#get crc from data
-			receivedCRC = struct.unpack('H', str(block2[29:31]))[0]
-			#swap bytes for recievedCRC
-			receivedCRC = (((receivedCRC)>>8) | ((receivedCRC&0xFF)<<8))&0xFFFF
-			print "ReversedreceivedCRC= %x" % receivedCRC
-			print "length of stb1+sb2=", len(stringblock1+stringblock2)
-                	print ''.join('{:02x}'.format(ord(x)) for x in stringblock1)
-                	print ''.join('{:02x}'.format(ord(x)) for x in stringblock2)
-			calculatedCRC = crcCalc.calculate(block1+block2[0:27])	
-			
-			print "calculatedCRC = %x " % calculatedCRC 
-
-			# check for start bytes, if not present, then invalidate CRC
-
-			if (block1[0] != 0xAB) or (block1[1] != 0x66):
-				calculatedCRC = receivedCRC + 1
-
-			if (receivedCRC == calculatedCRC):
-				print "Good CRC Recived"
-
-                		currentWindSpeed = struct.unpack('f', str(block1[9:13]))[0] 
-
-                		currentWindGust = 0.0   # not implemented in Solar WXLink version
-	
-                		totalRain = struct.unpack('l', str(block1[17:21]))[0]
-	
-                		print("Rain Total=\t%0.2f in")%(totalRain/25.4)
-                		print("Wind Speed=\t%0.2f MPH")%(currentWindSpeed/1.6)
-		
-                		currentWindDirection = struct.unpack('H', str(block1[7:9]))[0]
-                		print "Wind Direction=\t\t\t %i Degrees" % currentWindDirection
-		
-                		# now do the AM2315 Temperature
-                		temperature = struct.unpack('f', str(block1[25:29]))[0]
-                	        print "OTFloat=%x%x%x%x" %(block1[25], block1[26], block1[27], block1[28])
-				elements = [block1[29], block1[30], block1[31], block2[0]]
-                		outHByte = bytearray(elements)
-                		humidity = struct.unpack('f', str(outHByte))[0]
-                		print "AM2315 from WXLink temperature: %0.1fC" % temperature
-                		print "AM2315 from WXLink humidity: %0.1f%%" % humidity
-
-
-
-                		# now read the SunAirPlus Data from WXLink
-		
-                		WXbatteryVoltage = struct.unpack('f', str(block2[1:5]))[0]
-                		WXbatteryCurrent = struct.unpack('f', str(block2[5:9]))[0]
-                		WXloadCurrent = struct.unpack('f', str(block2[9:13]))[0]
-                		WXsolarPanelVoltage = struct.unpack('f', str(block2[13:17]))[0]
-                		WXsolarPanelCurrent = struct.unpack('f', str(block2[17:21]))[0]
-
-		                WXbatteryPower = WXbatteryVoltage * (WXbatteryCurrent/1000)
-
-		                WXsolarPower = WXsolarPanelVoltage * (WXsolarPanelCurrent/1000)
-
-		                WXloadPower = 5.0 * (WXloadCurrent/1000)
-
-		                WXbatteryCharge = returnPercentLeftInBattery(WXbatteryVoltage, 4.19)	
-
-                		state.WXbatteryVoltage = WXbatteryVoltage 
-                		state.WXbatteryCurrent = WXbatteryCurrent
-                		state.WXloadCurrent = WXloadCurrent
-                		state.WXsolarPanelVoltage = WXsolarPanelVoltage
-                		state.WXsolarPanelCurrent = WXsolarPanelCurrent
-		                state.WXbatteryPower = WXbatteryPower
-		                state.WXsolarPower = WXsolarPower
-		                state.WXloadPower = WXloadPower
-		                state.WXbatteryCharge = WXbatteryCharge
-
-					
-                		auxA = struct.unpack('f', str(block2[21:25]))[0]
-                                # now set state variables
-
-	
-                		print "WXLink batteryVoltage = %6.2f" % WXbatteryVoltage
-                		print "WXLink batteryCurrent = %6.2f" % WXbatteryCurrent
-                		print "WXLink loadCurrent = %6.2f" % WXloadCurrent
-                		print "WXLink solarPanelVoltage = %6.2f" % WXsolarPanelVoltage
-                		print "WXLink solarPanelCurrent = %6.2f" % WXsolarPanelCurrent
-                		print "WXLink auxA = %6.2f" % auxA
-	
-                		# message ID
-                		MessageID = struct.unpack('l', str(block2[25:29]))[0]
-                		print "WXLink Message ID %i" % MessageID
-
-				if (config.WXLink_LastMessageID != MessageID):
-					config.WXLink_Data_Fresh = True
-					config.WXLink_LastMessageID = MessageID
-					print "WXLink_Data_Fresh set to True"
-
-			else:
-				print "Bad CRC Received"
-				return []
-
-		else:
-			return []
-	
-		# return list
-		returnList = []
-		returnList.append(block1_orig) 
-		returnList.append(block2_orig) 
-		returnList.append(currentWindSpeed) 
-		returnList.append(currentWindGust) 
-		returnList.append(totalRain) 
-		returnList.append(currentWindDirection) 
-		returnList.append(temperature) 
-		returnList.append(humidity) 
-		returnList.append(WXbatteryVoltage) 
-		returnList.append(WXbatteryCurrent) 
-		returnList.append(WXloadCurrent) 
-		returnList.append(WXsolarPanelVoltage) 
-		returnList.append(WXsolarPanelCurrent) 
-		returnList.append(auxA) 
-		returnList.append(MessageID) 
-
-		return returnList
 
 # write SunAirPlus stats out to file
 def writeSunAirPlusStats():
@@ -1016,7 +814,6 @@ def sampleWeather():
 
 	global HTUtemperature, HTUhumidity, rain60Minutes
 
-	global block1, block2
 
         global am2315
 
@@ -1040,27 +837,14 @@ def sampleWeather():
 			currentWindDirectionVoltage = weatherStation.current_wind_direction_voltage()
 	else:
 		# WXLink Data Gathering
-		try:
-			returnList = readWXLink(block1, block2)
-			# check for locked I2C and if is, then reset WXLink
+                #pay attention to semaphore in case new block is coming in
+
+	        returnList = readLoRa.readWXLink(state.block1, state.block2, state.stringblock1, state.stringblock2, state.block1_orig, state.block2_orig)
 
   		
-                        with open("/sys/class/gpio/gpio3/value") as pin:
-    				status = pin.read(1)
-      				print("SCL= %s" % (status))
-				if (status == "0"):
-					resetWXLink()
-					returnList = []
-               
-		except:
-        		print("Unexpected error:", sys.exc_info()[0])
-  			#print "Remember to export the pin first!"
-  			status = "Unknown"
  	
 		if (len(returnList) > 0):		
 		
-			block1 = returnList[0]
-			block2 = returnList[1]
 	
 			currentWindSpeed = returnList[2]
   			currentWindGust = 0.0 # not supported
@@ -1074,7 +858,7 @@ def sampleWeather():
 
 		else:
 			# checks for issue on startup
-			if ((len(block1) == 0) or (len(block2) == 0)):
+			if ((len(state.block1) == 0) or (len(state.block2) == 0)):
 
 				# skip update if bad
 				currentWindSpeed = 0.0 
@@ -1320,7 +1104,7 @@ def sampleSunAirPlus():
         	loadVoltage = busvoltage3 
 		loadPower = loadVoltage * (loadCurrent/1000)
 
-		batteryCharge = returnPercentLeftInBattery(batteryVoltage, 4.19)	
+		batteryCharge = util.returnPercentLeftInBattery(batteryVoltage, 4.19)	
 
                 state.batteryVoltage = batteryVoltage 
                 state.batteryCurrent = batteryCurrent
@@ -1351,7 +1135,6 @@ def sampleAndDisplay():
 
     global totalRain, as3935LightningCount
     global as3935, as3935LastInterrupt, as3935LastDistance, as3935LastStatus
-    global block1, block2
 
     I2C_Lock.acquire()
 
@@ -1852,6 +1635,9 @@ if (config.runLEDs):
     scheduler.add_job(pixelDriver.statusLEDs, 'interval', seconds=15, args=[PixelLock])
 
 # every 5 minutes, push data to mysql and check for shutdown
+
+if (config.WXLink_Present):
+	scheduler.add_job(readLoRa.readRawWXLink, 'interval', seconds=15)
 
 
 if (config.enable_MySQL_Logging == True):

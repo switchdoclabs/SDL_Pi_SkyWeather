@@ -88,6 +88,16 @@ WXbatteryCharge = 0
 
 fanState = False
 
+# WXLink Blocks
+block1 = ""
+block2 = ""
+stringblock1 = ""
+stringblock2 = ""
+block1_orig = ""
+block2_orig = ""
+
+ll = None
+
 def printState():
 
     print "-------------"
@@ -179,5 +189,7 @@ def printState():
     print "-------------"
     print "fanState = ", fanState
     print "-------------"
-
+    print "WXLink Blocks"
+    print "Block1 Length= ", len(block1)
+    print "Block2 Length= ", len(block2)
 

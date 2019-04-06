@@ -6,7 +6,8 @@ Version V027
 
 http://www.switchdoc.com/
 
-April 3, 2019:   Version 027 - Mod AS3935 Interrupt, added AQI to Database
+April 6, 2019:   Version 028 - Support for WXLink - remote WeatherRack/Temp/Humidity
+April 3, 2019:   Version 027 - Mod AS3935 Interrupt, added AQI to Database<BR>
 March 31, 2019:  Version 026 - Fixed Pins for Optional Fan On/Off<BR>
 
 -----------------
