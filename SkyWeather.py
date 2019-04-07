@@ -1670,8 +1670,7 @@ if (config.DustSensor_Present):
     
 # sky camera
 if (config.Camera_Present):
-    scheduler.add_job(SkyCamera.takeSkyPicture, 'interval', seconds=60*15)
-
+    scheduler.add_job(SkyCamera.takeSkyPicture, 'interval', seconds=config.INTERVAL_CAM_PICS__SECONDS) 
 
 
 # start scheduler

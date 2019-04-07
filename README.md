@@ -36,6 +36,12 @@ sudo pip install --upgrade setuptools pip <BR>
 sudo pip install setuptools --upgrade  <BR>
 sudo pip install apscheduler <BR>
 
+#Installing pigiod
+
+pigpiod is used to get accurate timing readings for the Air Quality sensor. <BR>
+
+sudo apt-get install pigpio
+
 
 ----------------<BR>
 Note some configurations of Raspberry Pi software requres the following:<BR>
@@ -64,7 +70,7 @@ for more software installation instructions.
 -----------
 setup your configuration variables in config.py!
 -----------
-
+We recommend you copy config.py to conflocal.py to avoid updates copying over your configuration file.<BR>
 --------
 Add SQL instructions
 ----------
@@ -85,6 +91,14 @@ NOTE:
 
 If you have a WXLink wireless transmitter installed, the software assumes you have connected your AM2315 outdoor temp/humidity sensor to the WXLink.  If you put another AM2315 on your local system, it will use those values instead of the WXLink values
 
+-------------------<BR>
+# Starting the SkyWeather.py program
+-------------------<BR>
+
+You start the program with two statements:
+
+sudo pigpiod
+sudo python SkyWeather.py
 
 -------------------<BR>
 Set up your rc.local for start on boot<BR>
@@ -92,6 +106,7 @@ Set up your rc.local for start on boot<BR>
 
 insert the following in your /etc/rc.local before the exit 0 statement:
 
+pigpiod
 cd /home/pi/SDL_Pi_SkyWeather <BR>
 nohup sudo python SkyWeather.py & <BR>
 
