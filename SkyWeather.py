@@ -607,25 +607,25 @@ def process_as3935_interrupt():
 
 
 
-# ad3935 Set up Lightning Detector
-if (config.Lightning_Mode == True):
-        as3935LastInterrupt = 0
-        as3935LightningCount = 0
-        as3935LastDistance = 0
-        as3935LastStatus = ""
-	as3935Interrupt = False
+# as3935 Set up Lightning Detector
+as3935LastInterrupt = 0
+as3935LightningCount = 0
+as3935LastDistance = 0
+as3935LastStatus = ""
+as3935Interrupt = False
 
 
 
-        # switch to BUS1 - for low loading
-        if (config.TCA9545_I2CMux_Present):
-         	tca9545.write_control_register(TCA9545_CONFIG_BUS1)
+# switch to BUS1 - for low loading ib Base Bus
+if (config.TCA9545_I2CMux_Present):
+   	tca9545.write_control_register(TCA9545_CONFIG_BUS1)
 
-        as3935 = RPi_AS3935(address=0x02, bus=1)
+as3935 = RPi_AS3935(address=0x02, bus=1)
 
-        IndoorOutdoor = True # True means outdoor
-        try:
+IndoorOutdoor = True # True means outdoor
+try:
 
+                print "as3935 start"
                 as3935.set_indoors(IndoorOutdoor)
                 config.AS3935_Present = True
                 print "as3935 present at 0x02"
@@ -633,7 +633,7 @@ if (config.Lightning_Mode == True):
                 if (config.TCA9545_I2CMux_Present):
          	    tca9545.write_control_register(TCA9545_CONFIG_BUS1)
 
-        except IOError as e:
+except IOError as e:
                 print "I/O error({0}): {1}".format(e.errno, e.strerror)
         	as3935 = RPi_AS3935(address=0x03, bus=1)
 
@@ -651,17 +651,17 @@ if (config.Lightning_Mode == True):
         		 	tca9545.write_control_register(TCA9545_CONFIG_BUS0)
 
 
-        if (config.AS3935_Present == True):
+if (config.AS3935_Present == True):
                 #i2ccommand = "sudo i2cdetect -y 1"
                 #output = subprocess.check_output (i2ccommand,shell=True, stderr=subprocess.STDOUT )
                 #print output
                 as3935.set_noise_floor(0)
                 as3935.calibrate(tun_cap=0x0F)
 
-        # back to BUS0
-        if (config.TCA9545_I2CMux_Present):
+# back to BUS0
+if (config.TCA9545_I2CMux_Present):
         	 tca9545.write_control_register(TCA9545_CONFIG_BUS0)
-	time.sleep(0.003)
+time.sleep(0.003)
 
 
 

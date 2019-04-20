@@ -116,10 +116,45 @@ def blynkSolarTerminalUpdate(entry):
         return 0
     
 
+def blynkUpdateImage():
+    #Blynk.setProperty(V1, "urls", "https://image1.jpg", "https://image2.jpg");
+
+    try:
+        if (DEBUGBLYNK):
+             print "blynkUpdateImage:started"
+        """
+        r = requests.get(config.BLYNK_URL+config.BLYNK_AUTH+'/update/V70?value=2') # Picture URL
+        if (DEBUGBLYNK):
+             print "blynkUpdateImage:OTHER:r.status_code:",r.status_code
+        #r = requests.get(config.BLYNK_URL+config.BLYNK_AUTH+'/update/V70?urls=http://www.switchdoc.com/2.jpg') # Picture URL
+        #r = requests.get(config.BLYNK_URL+config.BLYNK_AUTH+'/update/V70?urls=http://www.switchdoc.com/skycamera.jpg,http://www.switchdoc.com/2.jpg') # Picture URL
+        r = requests.get(config.BLYNK_URL+config.BLYNK_AUTH+'/update/V70?value=1;url=http://www.switchdoc.com/skycamera.jpg')
+        if (DEBUGBLYNK):
+             print "blynkUpdateImage:OTHER:r.status_code:",r.status_code
+        r = requests.get(config.BLYNK_URL+config.BLYNK_AUTH+'/update/V70?value=2;url=http://www.switchdoc.com/2.jpg') # Picture URL
+        if (DEBUGBLYNK):
+             print "blynkUpdateImage:OTHER:r.status_code:",r.status_code
+
+        r = requests.get(config.BLYNK_URL+config.BLYNK_AUTH+'/update/V70?value=2') # Picture URL
+        if (DEBUGBLYNK):
+             print "blynkUpdateImage:OTHER:r.status_code:",r.status_code
+        """
+        r = requests.get(config.BLYNK_URL+config.BLYNK_AUTH+'/update/V70?urls=http://www.switchdoc.com/SkyWeatherNoAlpha.png') # Picture URL
+
+    except Exception as e:
+        print "exception in blynkUpdateImage"
+        print (e)
+        return 0
+
+
 def blynkStateUpdate():
 
 
     try:
+
+        
+        blynkUpdateImage()
+        
         put_header={"Content-Type": "application/json"}
 
         # set last sample time 
