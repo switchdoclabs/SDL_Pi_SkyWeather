@@ -6,7 +6,8 @@ Version V028
 
 http://www.switchdoc.com/
 
-April 6, 2019:   Version 028 - Support for WXLink - remote WeatherRack/Temp/Humidity
+April 27, 2019:  Version 029 - Modified test programs<BR>
+April 6, 2019:   Version 028 - Support for WXLink - remote WeatherRack/Temp/Humidity<BR>
 April 3, 2019:   Version 027 - Mod AS3935 Interrupt, added AQI to Database<BR>
 March 31, 2019:  Version 026 - Fixed Pins for Optional Fan On/Off<BR>
 
