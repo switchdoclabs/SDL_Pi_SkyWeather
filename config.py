@@ -75,7 +75,6 @@ BMP280_Altitude_Meters = 648.0
 
 # device present global variables
 
-Lightning_Mode = False
 SolarPower_Mode = False
 
 Camera_Present = False

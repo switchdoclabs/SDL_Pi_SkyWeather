@@ -37,7 +37,7 @@ try:
 	tca9545 = SDL_Pi_TCA9545.SDL_Pi_TCA9545(addr=TCA9545_ADDRESS, bus_enable = TCA9545_CONFIG_BUS0)
 
 
-	# turn I2CBus 1 on
+	# turn I2CBus 1 on to reduce loading on I2CBus 0
 	tca9545.write_control_register(TCA9545_CONFIG_BUS1)
 	TCA9545_I2CMux_Present = True
 except:
@@ -59,9 +59,13 @@ GPIO.setmode(GPIO.BCM)
 # sensor. (Common implementations are in README.md)
 sensor = RPi_AS3935(address=0x02, bus=1)
 
-sensor.set_indoors(True)
-sensor.set_noise_floor(0)
-sensor.calibrate(tun_cap=0x0F)
+try:
+    sensor.set_indoors(True)
+    sensor.set_noise_floor(0)
+    sensor.calibrate(tun_cap=0x0F)
+except:
+    print "AS3935 NOT detected at I2C port 0x02 on base Bus"
+    exit()
 
 
 def handle_interrupt(channel):
@@ -87,6 +91,7 @@ pin = 16
 GPIO.setup(pin, GPIO.IN, pull_up_down = GPIO.PUD_UP )
 GPIO.add_event_detect(pin, GPIO.RISING, callback=handle_interrupt)
 
+print "AS3935 detected at I2C port 0x02"
 print "Waiting for lightning - or at least something that looks like it"
 
 while True:
