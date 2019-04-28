@@ -179,6 +179,7 @@ def blynkStateUpdate():
         if (DEBUGBLYNK):
             print "blynkStateUpdate:POST:r.status_code:",r.status_code
     
+
         val = util.returnTemperatureCF(state.currentOutsideTemperature)
         tval = "{0:0.1f} ".format(val) + util.returnTemperatureCFUnit()
         put_body = json.dumps([tval])

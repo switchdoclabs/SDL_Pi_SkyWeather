@@ -857,6 +857,15 @@ def sampleWeather():
 
 
 		else:
+			currentWindSpeed = state.ScurrentWindSpeed  
+  			currentWindGust = 0.0 # not supported
+  			totalRain = state.currentTotalRain
+			currentWindDirection = state.ScurrentWindDirection
+			currentWindDirectionVoltage = 0.0 # not supported
+
+    			outsideTemperature = state.currentOutsideTemperature
+    			outsideHumidity = state.currentOutsideHumidity
+
 			# checks for issue on startup
 			if ((len(state.block1) == 0) or (len(state.block2) == 0)):
 
