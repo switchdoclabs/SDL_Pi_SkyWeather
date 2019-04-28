@@ -101,7 +101,7 @@ Sunlight_Gain = 0
 
 # if the WXLink has stopped transmitting, == False
 WXLink_Data_Fresh = False
-WXLInk_LastMessageID = 0
+WXLink_LastMessageID = 0
 
 # Pin definitions
 pixelPin = 21

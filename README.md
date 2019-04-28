@@ -2,10 +2,11 @@ SkyWeather Libraries and Examples for Raspberry Pi Solar Powered Weather Station
 
 Supports SwitchDoc Labs WeatherRack PiWeather Board 
 
-Version V030 
+Version V031 
 
 http://www.switchdoc.com/
 
+April 28, 2019:  Version 031 - Fixed WXLink Temperature Reporting<BR>
 April 27, 2019:  Version 030 - Modified test programs<BR>
 April 20, 2019:  Version 029 - Fixed Lightning_Mode added Image test to blynkCode
 April 6, 2019:   Version 028 - Support for WXLink - remote WeatherRack/Temp/Humidity

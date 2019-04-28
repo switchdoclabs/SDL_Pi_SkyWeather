@@ -14,7 +14,7 @@ try:
 except ImportError:
 	import config
 
-config.SWVERSION = "029"
+config.SWVERSION = "031"
 
 
 import sys
@@ -972,7 +972,8 @@ def sampleWeather():
 		as3935InterruptStatus = "No AS3935 Lightning Detector Present"
 		as3935LastInterrupt = 0x00
 		
-	if (config.AM2315_Present):
+	if (config.WXLink_Present == False): # do not use internal AM2315 if we are WXLink connected
+	   if (config.AM2315_Present):
 		# get AM2315 Outside Humidity and Outside Temperature
 		# turn I2CBus 0 on
  		if (config.TCA9545_I2CMux_Present):
@@ -993,6 +994,8 @@ def sampleWeather():
                     state.currentOutsideHumidity = outsideHumidity
 	        if (config.SWDEBUG == True):
                     print "AM2315 Stats: (g,br,bc,rt,pc)", am2315.read_status_info()
+
+
 	if (config.WeatherUnderground_Present == True):
 
 		if (config.WXLink_Present):
