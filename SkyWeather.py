@@ -855,6 +855,19 @@ def sampleWeather():
     			outsideTemperature = returnList[6]
     			outsideHumidity = returnList[7]
 
+                        if (config.SunAirPlus_Present == False): # if SunAirPlus not here, use WXLink data
+                            state.batteryVoltage = state.WXbatteryVoltage 
+                            state.batteryCurrent = state.WXbatteryCurrent
+                            state.solarVoltage = state.WXsolarVoltage
+                            state.solarCurrent = state.WXsolarCurrent
+                            state.loadVoltage = state.WXloadVoltage
+                            state.loadCurrent = state.WXloadCurrent
+                            state.batteryPower = state.WXbatteryPower
+                            state.solarPower = state.WXsolarPower
+                            state.loadPower = state.WXloadPower
+                            state.batteryCharge = state.WXbatteryCharge
+                        if (config.USEBLYNK):
+                            updateBlynk.blynkStatusTerminalUpdate("WXLink ID# %d recieved"%config.WXLink_LastMessageID)
 
 		else:
 			currentWindSpeed = state.ScurrentWindSpeed  
@@ -1087,12 +1100,6 @@ def sampleSunAirPlus():
 		print "----------------- "
 		print " SunAirPlus Sampling" 
 		print "----------------- "
-		#
-        	# blink GPIO LED when it's run
-        	GPIO.setup(SUNAIRLED, GPIO.OUT)
-        	GPIO.output(SUNAIRLED, True)
-        	time.sleep(0.2)
-        	GPIO.output(SUNAIRLED, False)
 	
 
 	
@@ -1368,19 +1375,6 @@ def rebootPi(why):
      updateBlynk.blynkStatusTerminalUpdate("Pi Rebooting: %s" % why)
    pclogging.log(pclogging.INFO, __name__, "Pi Rebooting: %s" % why)
    os.system("sudo shutdown -r now")
-
-def blinkSunAirLED2X(howmany):
-
-   # blink GPIO LED when it's run
-   GPIO.setup(SUNAIRLED, GPIO.OUT)
-
-   i = 0
-   while (i< howmany):
-   	GPIO.output(SUNAIRLED, True)
-   	time.sleep(0.2)
-   	GPIO.output(SUNAIRLED, False)
-   	time.sleep(0.2)
-	i = i +1
 
 
 
