@@ -12,7 +12,7 @@ except ImportError:
                 import config
 
 
-DEBUGBLYNK = True 
+DEBUGBLYNK = False 
 def stopFlash():
         r = requests.get(config.BLYNK_URL+config.BLYNK_AUTH+'/update/V30?value=0')
 

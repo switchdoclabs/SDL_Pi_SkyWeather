@@ -867,7 +867,8 @@ def sampleWeather():
                             state.loadPower = state.WXloadPower
                             state.batteryCharge = state.WXbatteryCharge
                         if (config.USEBLYNK):
-                            updateBlynk.blynkStatusTerminalUpdate("WXLink ID# %d recieved"%config.WXLink_LastMessageID)
+                            if (config.WXLink_Data_Fresh == True):
+                                updateBlynk.blynkStatusTerminalUpdate("WXLink ID# %d recieved"%config.WXLink_LastMessageID)
 
 		else:
 			currentWindSpeed = state.ScurrentWindSpeed  
