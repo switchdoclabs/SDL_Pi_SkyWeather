@@ -2,10 +2,12 @@ SkyWeather Libraries and Examples for Raspberry Pi Solar Powered Weather Station
 
 Supports SwitchDoc Labs WeatherRack PiWeather Board 
 
-Version V031 
+Version V033 
 
 http://www.switchdoc.com/
 
+April 29, 2019:  Version 033 - WeatherSTEM Modification<BR>
+April 28, 2019:  Version 032 - Improved MySQL Reporting<BR>
 April 28, 2019:  Version 031 - Fixed WXLink Temperature Reporting<BR>
 April 27, 2019:  Version 030 - Modified test programs<BR>
 April 20, 2019:  Version 029 - Fixed Lightning_Mode added Image test to blynkCode
@@ -81,14 +83,18 @@ Add SQL instructions
 Use phpmyadmin or sql command lines to add the included SQL file to your MySQL databases.<BR>
 Note:  If the database has been updated, run the example below to update your database.   The current contents will not be lost.
 
+cd SkyWeatherSQL
 
-example:   sudo mysql -u root -p SkyWeather< SkyWeather.sql
+sudo mysql -u root -p < WeatherPiStructure.sql
 
 user:  root
 
 password: password
 
 Obviously with these credentials, don't connect port 3306 to the Internet.   Change them if you aren't sure.
+
+The phpmyadmin user: admin <BR>
+password:   password <BR>
 
 NOTE:
 

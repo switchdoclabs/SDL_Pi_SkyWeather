@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS GroveWeatherPi;
-USE GroveWeatherPi;
+CREATE DATABASE IF NOT EXISTS SkyWeather;
+USE SkyWeather;
 -- phpMyAdmin SQL Dump
 -- version 3.4.11.1deb2+deb7u1
 -- http://www.phpmyadmin.net
@@ -19,7 +19,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Database: `GroveWeatherPi`
+-- Database: `SkyWeather`
 --
 
 -- --------------------------------------------------------
@@ -95,3 +95,20 @@ CREATE TABLE IF NOT EXISTS `WeatherData` (
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `Sunlight`
+--
+
+CREATE TABLE `Sunlight` (
+	  `ID` int(11) NOT NULL,
+	  `TimeStamp` datetime NOT NULL,
+	  `Visible` int(11) NOT NULL,
+	  `IR` int(250) NOT NULL,
+	  `UV` int(250) NOT NULL,
+	  `UVIndex` float NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+

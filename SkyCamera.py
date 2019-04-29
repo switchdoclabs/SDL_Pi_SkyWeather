@@ -39,43 +39,6 @@ def takeSkyPicture():
 
 import base64
 
-def sendSkyPictureToWeatherStem():
-
-    # defining the api-endpoint  
-    API_ENDPOINT = "https://api.weatherstem.com/api/util"
-     
-    # your API key here 
-    API_KEY = "3gj8i0rm"
-  
-
-    with open("static/skycamera.jpg", "rb") as image_file:
-       encoded_string = base64.b64encode(image_file.read())
-
-    if (config.SWDEBUG):
-        print ("--------------------")
-        print ("SkyCam Picture Sending")
-        print ("--------------------")
-
-
-    # data to be sent to api 
-    data = {'data': encoded_string,
-                'api_key':API_KEY, 
-                'method': 'social_sky_image_upload',
-                'body': config.STATIONDESCRIPT,
-                'city': config.STATIONLOCATIONCITY,
-                'state':config.STATIONLOCATIONSTATE
-                } 
-                #'country':'United States',
-                #'zipcode': '99037',
-  
-    # sending post request and saving response as response object 
-    r = requests.post(url = API_ENDPOINT, json = data) 
-  
-    # extracting response text  
-    pastebin_url = r.text 
-    if (config.SWDEBUG):
-        print("The pastebin URL is:%s"%pastebin_url) 
-
 
 def sendSkyWeather():
 
@@ -98,26 +61,19 @@ def sendSkyWeather():
         bptrendvalue = "Rising"
     else:
         bptrendvalue = "Falling"
-    
+   
+    currentTime = time.time()
 
 
     data = {
-                "api_key":API_KEY, 
                 "SkyWeatherVersion": config.SWVERSION,
+                "SkyWeatherHardware": config.STATIONHARDWARE,
 
 	"device":{
-		"MAC":config.STATIONMAC,
-		"name":config.STATIONDESCRIPT,
-                "stationID": config.STATIONID,
-		"geo":{
-			"lat":config.STATIONLAT,
-			"lng":config.STATIONLONG
-		},
-                'city': config.STATIONLOCATIONCITY,
-                'state':config.STATIONLOCATIONSTATE,
-                'country': config.STATIONLOCATIONCOUNTRY
+                "key":  config.STATIONKEY,
+                "MAC":config.STATIONMAC,
 	},
-	"utc":"1552426410",
+	"utc":currentTime,
 	"sensors":[
 
 
@@ -345,17 +301,17 @@ def sendSkyWeather():
 	"cameras":[
 		{
 			"name":"Sky Camera",
-			"image": encoded_string
 		}
 		
 	]
     }
 
+    #"image": encoded_string
 
   
     # sending post request and saving response as response object 
     r = requests.post(url = API_ENDPOINT, json = data) 
-    #print data 
+    print data 
     # extracting response text  
     pastebin_url = r.text 
     if (config.SWDEBUG):

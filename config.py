@@ -31,7 +31,7 @@ enable_MySQL_Logging = False
 MySQL_Password = "password"
 
 # modify this IP to enable WLAN operating detection  - search for WLAN_check in SkyWeather.py
-enable_WLAN_Detection = True
+enable_WLAN_Detection = False
 PingableRouterAddress = "192.168.1.1"
 
 # LED configuration (on use on a Raspberry Pi 3B+)
@@ -43,15 +43,9 @@ runLEDs = False
 
 USEWEATHERSTEM = False
 INTERVAL_CAM_PICS__SECONDS = 60
-STATIONID = "SkyWeatherXXXX"
 STATIONMAC = MACADDRESS
-STATIONLOCATIONCITY = ""
-STATIONLOCATIONSTATE = ""
-STATIONLOCATIONCOUNTRY = ""
-STATIONLAT = ""
-STATIONLONG = ""
-
-STATIONDESCRIPT = ""
+STATIONKEY="XXXXYYYY"
+STATIONHARDWARE=""
 
 # WeatherUnderground Station
 

@@ -47,7 +47,7 @@ def log(level, source, message):
         try:
 	
                 #print("trying database")
-                con = mdb.connect('localhost', 'root', config.MySQL_Password, 'GroveWeatherPi');
+                con = mdb.connect('localhost', 'root', config.MySQL_Password, 'SkyWeather');
 
                 cur = con.cursor()
                 #print "before query"

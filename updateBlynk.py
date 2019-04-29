@@ -35,7 +35,7 @@ def blynkInit():
         # read english Metric in from file
 
         try:
-            f = open("/home/pi/SDL_Pi_GroveWeatherPi/state/EnglishMetric.txt", "r")
+            f = open("/home/pi/SDL_Pi_SkyWeather/state/EnglishMetric.txt", "r")
             value = int(f.read())
             f.close()
         except Exception as e:
@@ -376,14 +376,14 @@ def blynkStatusUpdate():
                 if (DEBUGBLYNK):
                     print "blynkStatusUpdate:POSTBRC:state.EnglishMetric set to Metric"
                 blynkStatusTerminalUpdate("Set to Metric Units ")
-                f = open("/home/pi/SDL_Pi_GroveWeatherPi/state/EnglishMetric.txt", "w")
+                f = open("/home/pi/SDL_Pi_SkyWeather/state/EnglishMetric.txt", "w")
                 f.write("1")
                 f.close()
         else:
 
             if (state.EnglishMetric == 1):
                 state.EnglishMetric = 0
-                f = open("/home/pi/SDL_Pi_GroveWeatherPi/state/EnglishMetric.txt", "w")
+                f = open("/home/pi/SDL_Pi_SkyWeather/state/EnglishMetric.txt", "w")
                 f.write("0")
                 f.close()
                 if (DEBUGBLYNK):

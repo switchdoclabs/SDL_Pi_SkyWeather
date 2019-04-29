@@ -4,7 +4,7 @@
 # SwitchDoc Labs March 30, 2015
 
 import sys
-sys.path.append('/home/pi/SDL_Pi_GroveWeatherPi/graphs')
+sys.path.append('/home/pi/SDL_Pi_SkyWeather/graphs')
 
 # Check for user imports
 try:
