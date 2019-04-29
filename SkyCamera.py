@@ -68,6 +68,7 @@ def sendSkyWeather():
     data = {
                 "SkyWeatherVersion": config.SWVERSION,
                 "SkyWeatherHardware": config.STATIONHARDWARE,
+                "API_Key": API_KEY,
 
 	"device":{
                 "key":  config.STATIONKEY,
