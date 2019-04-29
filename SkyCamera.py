@@ -301,12 +301,12 @@ def sendSkyWeather():
 	"cameras":[
 		{
 			"name":"Sky Camera",
+                        "image": encoded_string
 		}
 		
 	]
     }
 
-    #"image": encoded_string
 
   
     # sending post request and saving response as response object 
