@@ -312,7 +312,7 @@ def sendSkyWeather():
   
     # sending post request and saving response as response object 
     r = requests.post(url = API_ENDPOINT, json = data) 
-    print data 
+    #print data 
     # extracting response text  
     pastebin_url = r.text 
     if (config.SWDEBUG):
