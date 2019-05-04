@@ -14,7 +14,7 @@ try:
 except ImportError:
 	import config
 
-config.SWVERSION = "033"
+config.SWVERSION = "034"
 
 
 import sys
@@ -139,6 +139,12 @@ if (config.runLEDs):
 import TSL2591
 import SDL_Pi_TCA9545
 
+
+################
+#Establish WeatherSTEMHash
+################
+if (config.USEWEATHERSTEM == True):
+    state.WeatherSTEMHash = SkyCamera.SkyWeatherKeyGeneration(config.STATIONKEY)
 
 ################
 # TCA9545 I2C Mux 
@@ -1548,7 +1554,7 @@ def checkForButtons():
 
 
 print  ""
-print "SkyWeather Solar Powered Weather Station Version "+config.SWVERSION+" - SwitchDoc Labs"
+print "SkyWeather Weather Station Version "+config.SWVERSION+" - SwitchDoc Labs"
 print ""
 print ""
 print "Program Started at:"+ time.strftime("%Y-%m-%d %H:%M:%S")
@@ -1631,7 +1637,9 @@ sampleAndDisplay()
 
 # test SkyWeather
 
-#SkyCamera.sendSkyWeather()
+print ("sending SkyCamera")
+SkyCamera.sendSkyWeather()
+
 # Set up scheduler
 
 scheduler = BackgroundScheduler()

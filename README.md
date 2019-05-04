@@ -2,10 +2,12 @@ SkyWeather Libraries and Examples for Raspberry Pi Solar Powered Weather Station
 
 Supports SwitchDoc Labs WeatherRack PiWeather Board 
 
-Version V033 
+Version V034 
 
 http://www.switchdoc.com/
 
+May 4, 2019:     Version 034 - WeatherSTEM testing Version<BR>
+May 1, 2019:     Version 033 - WeatherSTEM API Started<BR>
 April 29, 2019:  Version 033 - WeatherSTEM Modification<BR>
 April 28, 2019:  Version 032 - Improved MySQL Reporting<BR>
 April 28, 2019:  Version 031 - Fixed WXLink Temperature Reporting<BR>

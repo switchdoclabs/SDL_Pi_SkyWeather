@@ -40,18 +40,12 @@ def  BarometerLightningGraph(source,days,delay):
 	time.sleep(delay)
 	print("BarometerLightningGraph running now")
 
-        # blink GPIO LED when it's run
-        GPIO.setup(18, GPIO.OUT)
-        GPIO.output(18, True)
-        time.sleep(0.2)
-        GPIO.output(18, False)
-	
 
 	# now we have get the data, stuff it in the graph 
 
 	try:
 		print("trying database")
-    		db = mdb.connect('localhost', 'root', config.MySQL_Password, 'GroveWeatherPi');
+    		db = mdb.connect('localhost', 'root', config.MySQL_Password, 'SkyWeather');
 
     		cursor = db.cursor()
 
@@ -120,10 +114,7 @@ def  BarometerLightningGraph(source,days,delay):
 		pyplot.setp( ax.xaxis.get_majorticklabels(), rotation=70)
 		ax.xaxis.set_major_formatter(dates.DateFormatter('%m/%d-%H'))
 		pyplot.show()
-		try:
-			pyplot.savefig("/home/pi/RasPiConnectServer/static/BarometerLightningGraph.png")	
-		except:
-			pyplot.savefig("/home/pi/SDL_Pi_GroveWeatherPi/static/BarometerLightningGraph.png")	
+		pyplot.savefig("/home/pi/SDL_Pi_SkyWeather/static/BarometerLightningGraph.png")	
 
 		
 	except mdb.Error, e:

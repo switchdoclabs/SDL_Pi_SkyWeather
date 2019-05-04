@@ -40,17 +40,11 @@ def  PowerVoltageGraph(source,days,delay):
 	time.sleep(delay)
 	print("PowerVoltageGraph running now")
 	
-        # blink GPIO LED when it's run
-	GPIO.setup(18, GPIO.OUT)
-        GPIO.output(18, True)
-        time.sleep(0.2)
-        GPIO.output(18, False)
-
 	# now we have get the data, stuff it in the graph 
 
 	try:
 		print("trying database")
-    		db = mdb.connect('localhost', 'root', config.MySQL_Password, 'GroveWeatherPi');
+    		db = mdb.connect('localhost', 'root', config.MySQL_Password, 'SkyWeather');
 
     		cursor = db.cursor()
 
@@ -105,16 +99,13 @@ def  PowerVoltageGraph(source,days,delay):
 		else:
 			myMax = max(s)
 		pylab.axis([min(t), max(t), min(u), myMax])
-		pylab.figtext(.5, .05, ("GroveWeatherPi Power Voltage Last %i Days" % days),fontsize=18,ha='center')
+		pylab.figtext(.5, .05, ("SkyWeather Power Voltage Last %i Days" % days),fontsize=18,ha='center')
 		pyplot.setp( ax.xaxis.get_majorticklabels(), rotation=70)
 
 		pylab.grid(True)
 
 		pyplot.show()
-		try:
-			pyplot.savefig("/home/pi/RasPiConnectServer/static/PowerVoltageGraph.png",facecolor=fig.get_facecolor())	
-		except:
-			pyplot.savefig("/home/pi/SDL_Pi_GroveWeatherPi/static/PowerVoltageGraph.png",facecolor=fig.get_facecolor())	
+		pyplot.savefig("/home/pi/SDL_Pi_SkyWeather/static/PowerVoltageGraph.png",facecolor=fig.get_facecolor())	
 
 
 	except mdb.Error, e:

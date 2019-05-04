@@ -3,6 +3,11 @@
 #
 #
 
+
+# WeatherSTEM info
+
+WeatherSTEMHash = ""
+
 # Weather Variables
 
 currentOutsideTemperature = 2.0

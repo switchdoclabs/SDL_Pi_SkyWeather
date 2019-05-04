@@ -47,6 +47,7 @@ STATIONMAC = MACADDRESS
 STATIONKEY="XXXXYYYY"
 STATIONHARDWARE=""
 
+
 # WeatherUnderground Station
 
 WeatherUnderground_Present = False
@@ -69,7 +70,6 @@ BMP280_Altitude_Meters = 648.0
 
 # device present global variables
 
-SolarPower_Mode = False
 
 Camera_Present = False
 TCA9545_I2CMux_Present = False

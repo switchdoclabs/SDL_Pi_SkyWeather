@@ -4,11 +4,21 @@ import time
 import picamera
 import state
 
+import hashlib
+
 # Check for user imports
 try:
             import conflocal as config
 except ImportError:
             import config
+
+def SkyWeatherKeyGeneration(userKey):
+
+    catkey = "AZWqNqDMhvK8Lhbb2jtk1bucj0s2lqZ6" +userKey
+
+    md5result = hashlib.md5(catkey)
+    #print ("hashkey =", md5result.hexdigest())
+    return md5result.hexdigest()
 
 def takeSkyPicture():
 
@@ -32,9 +42,8 @@ def takeSkyPicture():
 
     camera.capture('static/skycamera.jpg')
     camera.close()
-
-#    sendSkyPictureToWeatherStem()
-    sendSkyWeather()
+    if (config.USEWEATHERSTEM == True):
+        sendSkyWeather()
 
 
 import base64
@@ -45,8 +54,6 @@ def sendSkyWeather():
     # defining the api-endpoint  
     API_ENDPOINT = "https://skyweather.weatherstem.com/"
      
-    # your API key here 
-    API_KEY = "3gj8i0rm"
   
 
     with open("static/skycamera.jpg", "rb") as image_file:
@@ -68,7 +75,7 @@ def sendSkyWeather():
     data = {
                 "SkyWeatherVersion": config.SWVERSION,
                 "SkyWeatherHardware": config.STATIONHARDWARE,
-                "API_Key": API_KEY,
+                "api_key": state.WeatherSTEMHash,
 
 	"device":{
                 "key":  config.STATIONKEY,

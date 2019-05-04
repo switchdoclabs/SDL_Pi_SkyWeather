@@ -40,9 +40,11 @@ def blynkInit():
             f.close()
         except Exception as e:
             value = 0
-            print "initial state - no EnglishMetric.txt value=", value
-            print "exception in blynkInit"
-            print (e)
+            #print "initial state - no EnglishMetric.txt value=", value
+            f1 = open("/home/pi/SDL_Pi_SkyWeather/state/EnglishMetric.txt", "w")
+            f1.write("0")
+            f1.close()
+            
         state.EnglishMetric = value
         if (DEBUGBLYNK):
             print "state.EnglishMetric = ", value
@@ -251,13 +253,13 @@ def blynkStateUpdate():
 
         #Sunlight 
         val = "{0:0.0f}".format(state.currentSunlightVisible) 
-        print ("Sunlight Val = ", state.currentSunlightVisible)
+        #print ("Sunlight Val = ", state.currentSunlightVisible)
         put_body = json.dumps([val])
         r = requests.put(config.BLYNK_URL+config.BLYNK_AUTH+'/update/V4', data=put_body, headers=put_header)
 
         #Sunlight 
         val = "{0:0.0f}".format(state.currentSunlightVisible) 
-        print ("Sunlight Val = ", state.currentSunlightVisible)
+        #print ("Sunlight Val = ", state.currentSunlightVisible)
         put_body = json.dumps([val])
         r = requests.put(config.BLYNK_URL+config.BLYNK_AUTH+'/update/V60', data=put_body, headers=put_header)
 
