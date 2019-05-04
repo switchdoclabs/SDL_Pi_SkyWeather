@@ -41,7 +41,7 @@ def read_AQI():
           print ("###############")
 
       if (config.SWDEBUG):
-          print ("Turning Power On")
+          print ("Turning Dust Power On")
       powerOnDustSensor()
 
       pi = pigpio.pi() # Connect to Pi.
