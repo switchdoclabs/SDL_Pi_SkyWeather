@@ -10,44 +10,44 @@ WeatherSTEMHash = ""
 
 # Weather Variables
 
-currentOutsideTemperature = 2.0
-currentOutsideHumidity = 2
+currentOutsideTemperature = 0.0
+currentOutsideHumidity = 1
 
-currentInsideTemperature = 1.0
-currentInsideHumidity = 4
+currentInsideTemperature = 0.0
+currentInsideHumidity = 1
 
-currentRain60Minutes = 0.1
+currentRain60Minutes = 0.0
 
-currentSunlightVisible = 1
-currentSunlightIR = 2
-currentSunlightUV = 3
-currentSunlightUVIndex  = 4
+currentSunlightVisible = 0
+currentSunlightIR = 0
+currentSunlightUV = 0
+currentSunlightUVIndex  = 0
 
-ScurrentWindSpeed = 6
-ScurrentWindGust  = 7
-ScurrentWindDirection  = 7.5
-currentTotalRain  = 8
+ScurrentWindSpeed = 0
+ScurrentWindGust  = 0
+ScurrentWindDirection  = 0.2
+currentTotalRain  = 0
 
-currentBarometricPressure = 9
-currentAltitude = 10
-currentSeaLevel = 10
+currentBarometricPressure = 0
+currentAltitude = 0 
+currentSeaLevel = 0
 barometricTrend = True
-pastBarometricReading = 9
+pastBarometricReading = 0
 
-Indoor_AirQuality_Sensor_Value = 101
-Outdoor_AirQuality_Sensor_Value = 101
-Hour24_Outdoor_AirQuality_Sensor_Value = 101
+Indoor_AirQuality_Sensor_Value = 0
+Outdoor_AirQuality_Sensor_Value = 0
+Hour24_Outdoor_AirQuality_Sensor_Value = 0
 
 
 
 
 # Lightning Values
 
-currentAs3935Interrupt = 11
+currentAs3935Interrupt = 0
 
-currentAs3935LastInterrupt = 12
-currentAs3935LastDistance = 13
-currentAs3935LastStatus = 14
+currentAs3935LastInterrupt = 0
+currentAs3935LastDistance = 0
+currentAs3935LastStatus = 0
 
 currentAs3935LastLightningTimeStamp = 0
 
