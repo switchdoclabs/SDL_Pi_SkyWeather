@@ -1637,8 +1637,8 @@ sampleAndDisplay()
 
 # test SkyWeather
 
-print ("sending SkyCamera")
-SkyCamera.sendSkyWeather()
+#print ("sending SkyCamera")
+#SkyCamera.sendSkyWeather()
 
 # Set up scheduler
 
