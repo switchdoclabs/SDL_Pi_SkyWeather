@@ -14,7 +14,7 @@ try:
 except ImportError:
 	import config
 
-config.SWVERSION = "034"
+config.SWVERSION = "035"
 
 
 import sys
@@ -1637,8 +1637,8 @@ sampleAndDisplay()
 
 # test SkyWeather
 
-print ("sending SkyCamera")
-SkyCamera.sendSkyWeather()
+#print ("sending SkyCamera")
+#SkyCamera.sendSkyWeather()
 
 # Set up scheduler
 

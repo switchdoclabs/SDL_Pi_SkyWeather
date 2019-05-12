@@ -28,8 +28,8 @@ def takeSkyPicture():
         print ("--------------------")
     camera = picamera.PiCamera()
 
-    #camera.rotation = 180
-    camera.rotation = 270
+    camera.rotation = 180
+    #camera.rotation = 270
     camera.resolution = (1920, 1080)
     # Camera warm-up time
 
