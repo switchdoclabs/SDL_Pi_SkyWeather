@@ -22,7 +22,8 @@ def patTheDog():
 
 
 # pat it twice 
-
-patTheDog()
-time.sleep(15)
-patTheDog()
+while True:
+    
+    patTheDog()
+    time.sleep(15)
+    patTheDog()
