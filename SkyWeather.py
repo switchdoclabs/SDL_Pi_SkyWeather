@@ -14,7 +14,7 @@ try:
 except ImportError:
 	import config
 
-config.SWVERSION = "034"
+config.SWVERSION = "035"
 
 
 import sys
@@ -924,7 +924,7 @@ def sampleWeather():
 			bmp180Altitude = config.BMP280_Altitude_Meters 
 			bmp180SeaLevel = BME680_Functions.getSeaLevelPressure(config.BMP280_Altitude_Meters, bmp180Pressure)
                         # reset read pressure to Sea Level
-                        bmp180Pressure = bmp180SeaLevel 
+                        #bmp180Pressure = bmp180SeaLevel 
 
 		except:
         		print("Unexpected error:", sys.exc_info()[0])
@@ -1079,7 +1079,7 @@ def sampleWeather():
         state.ScurrentWindDirection  = currentWindDirection
         state.currentTotalRain  = totalRain
 
-        state.currentBarometricPressure = bmp180SeaLevel 
+        state.currentBarometricPressure = bmp180Pressure 
 
         state.currentAltitude = bmp180Altitude
         state.currentSeaLevel = bmp180SeaLevel

@@ -66,7 +66,7 @@ BLYNK_URL = 'http://blynk-cloud.com/'
 
 # for barometeric pressure - needed to calculate sealevel equivalent - set your weatherstation elevation here
 
-BMP280_Altitude_Meters = 648.0
+BMP280_Altitude_Meters = 328.0
 
 # device present global variables
 
