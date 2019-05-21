@@ -2,11 +2,12 @@ SkyWeather Libraries and Examples for Raspberry Pi Solar Powered Weather Station
 
 Supports SwitchDoc Labs WeatherRack PiWeather Board 
 
-Version V035 
+Version V036 
 
 http://www.switchdoc.com/
 
-May 20, 2019:    Version 035 - Fixed Barometric Pressure Reporting<BR>
+May 20, 2019:    Version 036 - Fixed Barometric Pressure Reporting<BR>
+May 12, 2019:    Version 035 - Debug Statements removed<BR>
 May 4, 2019:     Version 034 - WeatherSTEM testing Version<BR>
 May 1, 2019:     Version 033 - WeatherSTEM API Started<BR>
 April 29, 2019:  Version 033 - WeatherSTEM Modification<BR>
