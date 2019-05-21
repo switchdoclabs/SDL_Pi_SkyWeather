@@ -6,6 +6,7 @@ Version V036
 
 http://www.switchdoc.com/
 
+May 21, 2019:    Version 037 - Blynk Changes / Bug Fix<BR>
 May 20, 2019:    Version 036 - Fixed Barometric Pressure Reporting<BR>
 May 12, 2019:    Version 035 - Debug Statements removed<BR>
 May 4, 2019:     Version 034 - WeatherSTEM testing Version<BR>

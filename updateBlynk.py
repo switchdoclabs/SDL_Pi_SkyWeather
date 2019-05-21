@@ -236,6 +236,11 @@ def blynkStateUpdate():
         val = state.currentOutsideHumidity
         put_body = json.dumps([val])
         r = requests.put(config.BLYNK_URL+config.BLYNK_AUTH+'/update/V19', data=put_body, headers=put_header)
+
+        # outdoor Air Quality
+        val = state.Outdoor_AirQuality_Sensor_Value 
+        put_body = json.dumps([val])
+        r = requests.put(config.BLYNK_URL+config.BLYNK_AUTH+'/update/V20', data=put_body, headers=put_header)
         
         #wind direction
         val = "{0:0.0f}/".format(state.ScurrentWindDirection) + util.returnWindDirection(state.ScurrentWindDirection)
@@ -275,7 +280,7 @@ def blynkStateUpdate():
         if (state.EnglishMetric == 1):
             tval = "{0:0.2f}".format(state.currentBarometricPressure) 
         else:
-            tval = "{0:0.2f}".format(state.currentSeaLevel * 0.2953) 
+            tval = "{0:0.2f}".format(state.currentSeaLevel * 0.2953)/10.0 
         put_body = json.dumps([tval])
         r = requests.put(config.BLYNK_URL+config.BLYNK_AUTH+'/update/V41', data=put_body, headers=put_header)
 
