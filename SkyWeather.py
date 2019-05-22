@@ -14,7 +14,7 @@ try:
 except ImportError:
 	import config
 
-config.SWVERSION = "037"
+config.SWVERSION = "038"
 
 
 import sys

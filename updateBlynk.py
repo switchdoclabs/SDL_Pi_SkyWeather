@@ -5,6 +5,7 @@ import requests
 import json
 import util
 import state
+import traceback
 # Check for user imports
 try:
                 import conflocal as config
@@ -270,17 +271,17 @@ def blynkStateUpdate():
 
         #barometric Pressure 
         if (state.EnglishMetric == 1):
-            tval = "{0:0.2f}hPa".format(state.currentBarometricPressure) 
+            tval = "{0:0.2f}hPa".format(state.currentSeaLevel) 
         else:
-            tval = "{0:0.2f}in".format(state.currentSeaLevel * 0.2953/10.0) 
+            tval = "{0:0.2f}in".format((state.currentSeaLevel * 0.2953)/10.0) 
         put_body = json.dumps([tval])
         r = requests.put(config.BLYNK_URL+config.BLYNK_AUTH+'/update/V40', data=put_body, headers=put_header)
 
         #barometric Pressure graph
         if (state.EnglishMetric == 1):
-            tval = "{0:0.2f}".format(state.currentBarometricPressure) 
+            tval = "{0:0.2f}".format(state.currentSeaLevel) 
         else:
-            tval = "{0:0.2f}".format(state.currentSeaLevel * 0.2953)/10.0 
+            tval = "{0:0.2f}".format((state.currentSeaLevel * 0.2953)/10.0) 
         put_body = json.dumps([tval])
         r = requests.put(config.BLYNK_URL+config.BLYNK_AUTH+'/update/V41', data=put_body, headers=put_header)
 
@@ -361,6 +362,7 @@ def blynkStateUpdate():
         return 1
     except Exception as e:
         print "exception in blynkStateUpdate"
+        print(traceback.format_exc())
         print (e)
         return 0
 
