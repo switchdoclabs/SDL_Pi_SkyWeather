@@ -54,6 +54,11 @@ pigpiod is used to get accurate timing readings for the Air Quality sensor. <BR>
 
 sudo apt-get install pigpio
 
+#installing matplotlib
+
+sudo apt-get install python-numpy python-matplotlib python-mpltoolkits.basemap 
+
+
 
 ----------------<BR>
 Note some configurations of Raspberry Pi software requres the following:<BR>
