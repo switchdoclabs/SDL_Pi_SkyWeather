@@ -28,20 +28,37 @@ def takeSkyPicture():
         print ("--------------------")
     camera = picamera.PiCamera()
 
-    camera.rotation = 180
-    #camera.rotation = 270
-    camera.resolution = (1920, 1080)
-    # Camera warm-up time
+    try:
+        camera.rotation = 180
+        #camera.rotation = 270
+        camera.resolution = (1920, 1080)
+        # Camera warm-up time
 
 
-    camera.annotate_foreground = picamera.Color(y=0.2,u=0, v=0)
-    camera.annotate_background = picamera.Color(y=0.8, u=0, v=0)
-    val = time.strftime("SkyWeather: %Y-%m-%d %H:%M:%S")  
-    camera.annotate_text = val
-    time.sleep(2)
+        camera.annotate_foreground = picamera.Color(y=0.2,u=0, v=0)
+        camera.annotate_background = picamera.Color(y=0.8, u=0, v=0)
+        val = time.strftime("SkyWeather: %Y-%m-%d %H:%M:%S")  
+        camera.annotate_text = val
+        time.sleep(2)
 
-    camera.capture('static/skycamera.jpg')
-    camera.close()
+        camera.capture('static/skycamera.jpg')
+    except:
+            if (config.SWDEBUG):
+                print ("--------------------")
+                print ("SkyCam Picture Failed")
+                print ("--------------------")
+
+
+    finally:
+        try:
+            camera.close()
+        except:
+            if (config.SWDEBUG):
+                print ("--------------------")
+                print ("SkyCam Close Failed ")
+                print ("--------------------")
+
+
     if (config.USEWEATHERSTEM == True):
         sendSkyWeather()
 
