@@ -6,6 +6,7 @@ Version V038
 
 http://www.switchdoc.com/
 
+June 5, 2019:    Version 039 - AM2315 Reliablity Fix <BR>
 May 21, 2019:    Version 038 - Blynk Bug Fix<BR>
 May 21, 2019:    Version 037 - Blynk Changes / Bug Fix<BR>
 May 20, 2019:    Version 036 - Fixed Barometric Pressure Reporting<BR>

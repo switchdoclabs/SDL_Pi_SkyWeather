@@ -12,6 +12,7 @@ import time
 import traceback
 import RPi.GPIO as GPIO
 
+import adasmbus 
 GPIO.setmode(GPIO.BCM)
 
 # GLOBAL VARIABLES
@@ -19,15 +20,15 @@ AM2315_I2CADDR = 0x5C
 AM2315_READREG = 0x03
 MAXREADATTEMPT = 10
 
-AM2315DEBUG = True
+AM2315DEBUG = False
 
 class AM2315:
     """Base functionality for AM2315 humidity and temperature sensor. """
 
     def __init__(self, address=AM2315_I2CADDR, i2c=None, powerpin=0, **kwargs):
-        if i2c is None:
-            import Adafruit_GPIO.I2C as I2C
-            i2c = I2C
+        #if i2c is None:
+        #    import Adafruit_GPIO.I2C as I2C
+        #    i2c = I2C
 
         self.powerpin = powerpin
         # for Grove PowerSave
@@ -36,7 +37,8 @@ class AM2315:
             GPIO.output(self.powerpin, True)
             time.sleep(1.0)
 
-        self._device = i2c.get_i2c_device(address, **kwargs)
+        self._device = adasmbus.SMBus(1)
+
         self.humidity = 0
         self.temperature = 0
         self.crc = 0
@@ -70,19 +72,31 @@ class AM2315:
                          crc = crc >> 1
         return crc
 
+
     # fast read for device detection without faults
     def _fast_read_data(self):   
 
+        
+        # WAKE UP
+        #self._device.write8(AM2315_READREG,0x00)
         try:
-            # WAKE UP
-            self._device.write8(AM2315_READREG,0x00)
+            self._device.write_byte_data(AM2315_I2CADDR, AM2315_READREG, 0x00)
+            time.sleep(0.050)
         except:
-            time.sleep(0.09)
+            self._device.write_byte_data(AM2315_I2CADDR, AM2315_READREG, 0x00)
+            time.sleep(0.050)
+
 
         # TELL THE DEVICE WE WANT 4 BYTES OF DATA
-        self._device.writeList(AM2315_READREG,[0x00, 0x04])
-        time.sleep(0.09)
-        tmp = self._device.readList(AM2315_READREG,8)
+        #self._device.writeList(AM2315_READREG,[0x00, 0x04])
+        self._device.write_i2c_block_data(AM2315_I2CADDR, AM2315_READREG,[0x00, 0x04])
+
+        time.sleep(0.050)
+        # use modified read_i2c_block_data for read from AM2315 
+        tmp = self._device.am2315_read_i2c_block_data(AM2315_I2CADDR, AM2315_READREG,8)
+        #tmp = self._device.readList(AM2315_READREG,8)
+        print(' '.join(map(str, tmp)))
+
         self.temperature = (((tmp[4] & 0x7F) << 8) | tmp[5]) / 10.0
         self.humidity = ((tmp[2] << 8) | tmp[3]) / 10.0
 
@@ -93,16 +107,18 @@ class AM2315:
         t = bytearray([tmp[0], tmp[1], tmp[2], tmp[3], tmp[4], tmp[5]])
         c = self.verify_crc(t)
 
-        if (AM2315DEBUG == True):
-            print "Fast Read AM2315temperature=",self.temperature
-            print "Fast Read AM2315humdity=",self.humidity
-            print "Fast Read AM2315crc=",self.crc
-            print "Fast Read AM2315c=",c
-
-        if self.crc != c:
+        if (self.crc != c) or (c == 0):
+        #if (self.crc != c): 
             if (AM2315DEBUG == True):
                 print "AM2314 BAD CRC"
             self.crc = -1
+        else:
+
+            if (AM2315DEBUG == True):
+                print "Fast Read AM2315temperature=",self.temperature
+                print "Fast Read AM2315humdity=",self.humidity
+                print "Fast Read AM2315crc=",self.crc
+                print "Fast Read AM2315c=",c
 
 
     def _read_data(self):
@@ -112,15 +128,25 @@ class AM2315:
         while count <= MAXREADATTEMPT:
             try:
                 try:
-                    # WAKE UP
-                    self._device.write8(AM2315_READREG,0x00)
+                    self._device.write_byte_data(AM2315_I2CADDR, AM2315_READREG, 0x00)
+                    time.sleep(0.050)
                 except:
-                    time.sleep(0.09)
+                    if (AM2315DEBUG == True):
+                        print "Wake Byte Fail"
+                    time.sleep(2.000)                    
+                    self._device.write_byte_data(AM2315_I2CADDR, AM2315_READREG, 0x00)
+                    time.sleep(0.001)
+                    #self._device.write_byte_data(AM2315_I2CADDR, AM2315_READREG, 0x00)
+                    #time.sleep(0.001)
+                    #self._device.write_byte_data(AM2315_I2CADDR, AM2315_READREG, 0x00)
+                    time.sleep(0.050)
 
                 # TELL THE DEVICE WE WANT 4 BYTES OF DATA
-                self._device.writeList(AM2315_READREG,[0x00, 0x04])
+                self._device.write_i2c_block_data(AM2315_I2CADDR, AM2315_READREG,[0x00, 0x04])
+                #self._device.writeList(AM2315_READREG,[0x00, 0x04])
                 time.sleep(0.09)
-                tmp = self._device.readList(AM2315_READREG,8)
+                tmp = self._device.am2315_read_i2c_block_data(AM2315_I2CADDR, AM2315_READREG,8)
+                #tmp = self._device.readList(AM2315_READREG,8)
                 self.temperature = (((tmp[4] & 0x7F) << 8) | tmp[5]) / 10.0
                 self.humidity = ((tmp[2] << 8) | tmp[3]) / 10.0
                 # check for > 10.0 degrees higher
@@ -138,7 +164,7 @@ class AM2315:
                                 # OK, temp is bad.  Ignore
                                 if (AM2315DEBUG == True):
                                     print ">>>>>>>>>>>>>"
-                                    print "Bad AM2315 Humidity = ", self.temperature
+                                    print "Bad AM2315 Temperature = ", self.temperature
                                     print ">>>>>>>>>>>>>"
                                     self.badreadings = self.badreadings+1
                                     tmp = None
@@ -169,6 +195,9 @@ class AM2315:
                         powercyclecount +1
                         count = 0 
             
+        if (AM2315DEBUG == True):
+            print "--->looking at good data"
+
         # GET THE DATA OUT OF THE LIST WE READ
         self.humidity = ((tmp[2] << 8) | tmp[3]) / 10.0
         self.temperature = (((tmp[4] & 0x7F) << 8) | tmp[5]) / 10.0
@@ -188,7 +217,8 @@ class AM2315:
             print "AM2315crc=",self.crc
             print "AM2315c=",c
 
-        if self.crc != c:
+        if (self.crc != c) or (c == 0):
+        #if self.crc != c:
             if (AM2315DEBUG == True):
                 print "AM2314 BAD CRC"
             self.badcrcs = self.badcrcs + 1

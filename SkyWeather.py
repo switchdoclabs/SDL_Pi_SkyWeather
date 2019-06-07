@@ -14,7 +14,7 @@ try:
 except ImportError:
 	import config
 
-config.SWVERSION = "038"
+config.SWVERSION = "039"
 
 
 import sys
@@ -708,7 +708,8 @@ crc_check = -1
 import AM2315
 try:
  	am2315 = AM2315.AM2315(powerpin=config.AM2315GSPIN )
-	outsideHumidity, outsideTemperature, crc_check = am2315.fast_read_humidity_temperature_crc() 
+	outsideHumidity, outsideTemperature, crc_check = am2315.read_humidity_temperature_crc() 
+	#outsideHumidity, outsideTemperature, crc_check = am2315.fast_read_humidity_temperature_crc() 
 	print "outsideTemperature: %0.1f C" % outsideTemperature
     	print "outsideHumidity: %0.1f %%" % outsideHumidity
         state.currentOutsideTemperature = outsideTemperature
