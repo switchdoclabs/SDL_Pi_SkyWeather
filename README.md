@@ -95,6 +95,13 @@ Add SQL instructions
 Use phpmyadmin or sql command lines to add the included SQL file to your MySQL databases.<BR>
 Note:  If the database has been updated, run the example below to update your database.   The current contents will not be lost.
 
+To install mysql ( https://www.stewright.me/2016/04/install-mysql-server-raspberry-pi/ ) <BR>
+
+also run this for the Python to MySQL bindings:
+
+sudo apt-get install python-mysqldb
+
+
 cd SkyWeatherSQL
 
 sudo mysql -u root -p < WeatherPiStructure.sql
