@@ -1,0 +1,12 @@
+*.pyc
+tx*
+.*.swp
+*.xml
+*.temp
+*.test
+nohup.out
+.*DS_Store
+conflocal.py
+state/EnglishMetric.txt
+static/SkyCamera.py
+static/*.png

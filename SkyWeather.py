@@ -14,7 +14,7 @@ try:
 except ImportError:
 	import config
 
-config.SWVERSION = "039"
+config.SWVERSION = "040"
 
 
 import sys
@@ -55,6 +55,7 @@ sys.path.append('./SDL_Pi_INA3221')
 sys.path.append('./graphs')
 sys.path.append('./SDL_Pi_HDC1000')
 sys.path.append('./SDL_Pi_AM2315')
+sys.path.append('./SDL_Pi_SHT30')
 sys.path.append('./BME680')
 
 sys.path.append('./SDL_Pi_GrovePowerDrive')
@@ -690,6 +691,42 @@ GPIO.add_event_detect(as3935pin, GPIO.RISING, callback=handle_as3935_interrupt)
 
 
 ##############
+# Setup SHT30
+# turn I2CBus 0 on
+if (config.TCA9545_I2CMux_Present):
+         tca9545.write_control_register(TCA9545_CONFIG_BUS0)
+
+# Grove Power Save Pins for device reset
+
+###############
+
+# Detect SHT30
+outsideHumidity = 0.0
+outsideTemperature = 0.0
+crc_check = -1
+import SHT30
+try:
+ 	sht30 = SHT30.SHT30(powerpin=config.SHT30GSPIN )
+	outsideHumidity, outsideTemperature, crc_checkH, crc_checkT = sht30.read_humidity_temperature_crc() 
+	
+	print "outsideTemperature: %0.1f C" % outsideTemperature
+    	print "outsideHumidity: %0.1f %%" % outsideHumidity
+        state.currentOutsideTemperature = outsideTemperature
+        state.currentOutsideHumidity = outsideHumidity
+        print "crcH: 0x%02x" % crc_checkH
+        print "crcT 0x%02x" % crc_checkT
+        config.SHT30_Present = True
+        if (crc_checkH == -1) or (crc_checkT == -1):
+        	config.SHT30_Present = False
+
+except:
+        config.SHT30_Present = False
+
+
+
+print "after SHT30"
+
+##############
 # Setup AM2315
 # turn I2CBus 0 on
 if (config.TCA9545_I2CMux_Present):
@@ -697,7 +734,6 @@ if (config.TCA9545_I2CMux_Present):
 
 # Grove Power Save Pins for device reset
 
-config.AM2315GSPIN = 6
 
 ###############
 
@@ -708,8 +744,8 @@ crc_check = -1
 import AM2315
 try:
  	am2315 = AM2315.AM2315(powerpin=config.AM2315GSPIN )
-	outsideHumidity, outsideTemperature, crc_check = am2315.read_humidity_temperature_crc() 
-	#outsideHumidity, outsideTemperature, crc_check = am2315.fast_read_humidity_temperature_crc() 
+	#outsideHumidity, outsideTemperature, crc_check = am2315.read_humidity_temperature_crc() 
+	outsideHumidity, outsideTemperature, crc_check = am2315.fast_read_humidity_temperature_crc() 
 	print "outsideTemperature: %0.1f C" % outsideTemperature
     	print "outsideHumidity: %0.1f %%" % outsideHumidity
         state.currentOutsideTemperature = outsideTemperature
@@ -1008,8 +1044,9 @@ def sampleWeather():
 		as3935InterruptStatus = "No AS3935 Lightning Detector Present"
 		as3935LastInterrupt = 0x00
 		
-	if (config.WXLink_Present == False): # do not use internal AM2315 if we are WXLink connected
-	   if (config.AM2315_Present):
+	if (config.WXLink_Present == False): # do not use internal AM2315 or SHT30 if we are WXLink connected
+           # if both AM2315 and SHT30 are present, SHT30 wins
+	   if (config.AM2315_Present) and ( config.SHT30_Present == False):
 		# get AM2315 Outside Humidity and Outside Temperature
 		# turn I2CBus 0 on
  		if (config.TCA9545_I2CMux_Present):
@@ -1030,6 +1067,24 @@ def sampleWeather():
                     state.currentOutsideHumidity = outsideHumidity
 	        if (config.SWDEBUG == True):
                     print "AM2315 Stats: (g,br,bc,rt,pc)", am2315.read_status_info()
+
+           # if both AM2315 and SHT30 are present, SHT30 wins
+	   if (config.SHT30_Present):
+		# get SHT30 Outside Humidity and Outside Temperature
+		# turn I2CBus 0 on
+ 		if (config.TCA9545_I2CMux_Present):
+        		 tca9545.write_control_register(TCA9545_CONFIG_BUS0)
+
+    		ToutsideHumidity, ToutsideTemperature, crc_checkH, crc_checkT = sht30.read_humidity_temperature_crc()
+                
+
+		if (crc_checkH !=  -1) and (crc_checkT != -1):
+                    outsideTemperature = ToutsideTemperature
+                    outsideHumidity = ToutsideHumidity
+                    state.currentOutsideTemperature = outsideTemperature
+                    state.currentOutsideHumidity = outsideHumidity
+	        if (config.SWDEBUG == True):
+                    print "SHT30 Stats: (g,br,bc,rt,pc)", sht30.read_status_info()
 
 
 	if (config.WeatherUnderground_Present == True):
@@ -1584,12 +1639,13 @@ print returnStatusLine("BMP280",config.BMP280_Present)
 print returnStatusLine("SkyCam",config.Camera_Present)
 print returnStatusLine("DS3231",config.DS3231_Present)
 print returnStatusLine("HDC1080",config.HDC1080_Present)
+print returnStatusLine("SHT30",config.SHT30_Present)
 print returnStatusLine("AM2315",config.AM2315_Present)
 print returnStatusLine("ADS1015",config.ADS1015_Present)
 print returnStatusLine("ADS1115",config.ADS1115_Present)
 print returnStatusLine("AS3935",config.AS3935_Present)
 print returnStatusLine("OLED",config.OLED_Present)
-print returnStatusLine("SunAirPlus",config.SunAirPlus_Present)
+print returnStatusLine("SunAirPlus/SunControl",config.SunAirPlus_Present)
 print returnStatusLine("SI1145 Sun Sensor",config.Sunlight_Present)
 print returnStatusLine("TSL2591 Sun Sensor",config.TSL2591_Present)
 print returnStatusLine("DustSensor",config.DustSensor_Present)

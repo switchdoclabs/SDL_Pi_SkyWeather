@@ -6,10 +6,11 @@ All documentation is on:
 
 https://shop.switchdoc.com/products/skyweather-raspberry-pi-based-weather-station-kit-for-the-cloud
 
-Version V039 
+Version V040  - EXPERIMENTAL!
 
 http://www.switchdoc.com/
 
+July 8, 2019:    Version 040 - WeatherUnderground Fix, Support for SHT30 - EXPERIMENTAL!<BR>
 June 5, 2019:    Version 039 - AM2315 Reliablity Fix <BR>
 May 21, 2019:    Version 038 - Blynk Bug Fix<BR>
 May 21, 2019:    Version 037 - Blynk Changes / Bug Fix<BR>

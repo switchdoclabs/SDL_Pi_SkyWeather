@@ -79,6 +79,7 @@ DS3231_Present = False
 BMP280_Present = False
 BME680_Present = False
 HDC1080_Present = False
+SHT30_Present = False
 AM2315_Present = False
 ADS1015_Present = False
 ADS1115_Present = False
@@ -108,6 +109,7 @@ anemometerPin = 20
 rainPin = 13
 
 
+SHT30GSPIN = 6
 AM2315GSPIN = 6
 
 # for fan
