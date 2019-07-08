@@ -1575,7 +1575,10 @@ def statusRain():
 
 def statusAM2315():
         if (config.USEBLYNK):
-            updateBlynk.blynkStatusTerminalUpdate("AM2315 ST: (g,br,bc,rt,pc) %s"% str(am2315.read_status_info()))
+            if (config.AM2315_Present):
+                updateBlynk.blynkStatusTerminalUpdate("AM2315 ST: (g,br,bc,rt,pc) %s"% str(am2315.read_status_info()))
+            if (config.SHT30_Present):
+                updateBlynk.blynkStatusTerminalUpdate("SHT30 ST: (g,br,bc,rt,pc) %s"% str(sht30.read_status_info()))
 
 def checkForShutdown():
 	if (batteryVoltage < 3.5):
