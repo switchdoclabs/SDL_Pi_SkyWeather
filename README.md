@@ -6,11 +6,11 @@ All documentation is on:
 
 https://shop.switchdoc.com/products/skyweather-raspberry-pi-based-weather-station-kit-for-the-cloud
 
-Version V040  - EXPERIMENTAL!
+Version V040  - WeatherUndergound Fix, support for SHT30
 
 http://www.switchdoc.com/
 
-July 8, 2019:    Version 040 - WeatherUnderground Fix, Support for SHT30 - EXPERIMENTAL!<BR>
+July 8, 2019:    Version 040 - WeatherUnderground Fix, Support for SHT30- Must update conflocal.py if used<BR>
 June 5, 2019:    Version 039 - AM2315 Reliablity Fix <BR>
 May 21, 2019:    Version 038 - Blynk Bug Fix<BR>
 May 21, 2019:    Version 037 - Blynk Changes / Bug Fix<BR>
@@ -26,6 +26,17 @@ April 20, 2019:  Version 029 - Fixed Lightning_Mode added Image test to blynkCod
 April 6, 2019:   Version 028 - Support for WXLink - remote WeatherRack/Temp/Humidity
 April 3, 2019:   Version 027 - Mod AS3935 Interrupt, added AQI to Database<BR>
 March 31, 2019:  Version 026 - Fixed Pins for Optional Fan On/Off<BR>
+
+-----------------
+Updating conflocal.py on your System<BR>
+-----------------
+
+Run this command:
+
+diff conflocal.py config.py
+
+Add the new config.py variables into your conflocal.py version for compatiblity
+
 
 -----------------
 Install this for smbus:
