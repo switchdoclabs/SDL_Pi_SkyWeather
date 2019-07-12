@@ -14,7 +14,7 @@ try:
 except ImportError:
 	import config
 
-config.SWVERSION = "040"
+config.SWVERSION = "041"
 
 
 import sys
@@ -325,15 +325,19 @@ PixelLock = threading.Lock()
 ################
 # PiCamera detect
 
-try:
+if (config.STREAMVIDEO == False):
+    try:
 
-    with picamera.PiCamera() as cam:
+        with picamera.PiCamera() as cam:
             print("Pi Camera Revision",cam.revision)
             cam.close()
+        config.Camera_Present = True
+    except:
+        config.Camera_Present = False
+else:
+    # Streaming camera is used, so we must detect differently and then start streaming
+    SkyCamera.startSkyStream()
     config.Camera_Present = True
-except:
-    config.Camera_Present = False
-
 
 
 # semaphore primitives for preventing I2C conflicts
@@ -707,7 +711,7 @@ crc_check = -1
 import SHT30
 try:
  	sht30 = SHT30.SHT30(powerpin=config.SHT30GSPIN )
-	outsideHumidity, outsideTemperature, crc_checkH, crc_checkT = sht30.read_humidity_temperature_crc() 
+	outsideHumidity, outsideTemperature, crc_checkH, crc_checkT = sht30.fast_read_humidity_temperature_crc() 
 	
 	print "outsideTemperature: %0.1f C" % outsideTemperature
     	print "outsideHumidity: %0.1f %%" % outsideHumidity
@@ -1640,6 +1644,7 @@ print returnStatusLine("I2C Mux - TCA9545",config.TCA9545_I2CMux_Present)
 print returnStatusLine("BME680",config.BME680_Present)
 print returnStatusLine("BMP280",config.BMP280_Present)
 print returnStatusLine("SkyCam",config.Camera_Present)
+print returnStatusLine("SkyCam Streaming",config.STREAMVIDEO)
 print returnStatusLine("DS3231",config.DS3231_Present)
 print returnStatusLine("HDC1080",config.HDC1080_Present)
 print returnStatusLine("SHT30",config.SHT30_Present)
@@ -1697,8 +1702,10 @@ sampleAndDisplay()
 
 # test SkyWeather
 
-#print ("sending SkyCamera")
+print ("Taking Stream SkyCamera")
 #SkyCamera.sendSkyWeather()
+SkyCamera.takeSkyStreamPicture()
+print ("Finished Taking Stream SkyCamera")
 
 # Set up scheduler
 
@@ -1766,7 +1773,10 @@ if (config.DustSensor_Present):
     
 # sky camera
 if (config.Camera_Present):
-    scheduler.add_job(SkyCamera.takeSkyPicture, 'interval', seconds=config.INTERVAL_CAM_PICS__SECONDS) 
+    if (config.STREAMVIDEO == False):
+        scheduler.add_job(SkyCamera.takeSkyPicture, 'interval', seconds=config.INTERVAL_CAM_PICS__SECONDS) 
+    else:
+        scheduler.add_job(SkyCamera.takeSkyStreamPicture, 'interval', seconds=config.INTERVAL_CAM_PICS__SECONDS) 
 
 
 # start scheduler

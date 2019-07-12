@@ -10,6 +10,7 @@ Version V040  - WeatherUndergound Fix, support for SHT30
 
 http://www.switchdoc.com/
 
+July 15, 2019:   Version 041 - WeatherSTEM streaming prototype software<BR>
 July 8, 2019:    Version 040 - WeatherUnderground Fix, Support for SHT30- Must update conflocal.py if used<BR>
 June 5, 2019:    Version 039 - AM2315 Reliablity Fix <BR>
 May 21, 2019:    Version 038 - Blynk Bug Fix<BR>
