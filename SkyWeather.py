@@ -707,7 +707,7 @@ crc_check = -1
 import SHT30
 try:
  	sht30 = SHT30.SHT30(powerpin=config.SHT30GSPIN )
-	outsideHumidity, outsideTemperature, crc_checkH, crc_checkT = sht30.read_humidity_temperature_crc() 
+	outsideHumidity, outsideTemperature, crc_checkH, crc_checkT = sht30.fast_read_humidity_temperature_crc() 
 	
 	print "outsideTemperature: %0.1f C" % outsideTemperature
     	print "outsideHumidity: %0.1f %%" % outsideHumidity
