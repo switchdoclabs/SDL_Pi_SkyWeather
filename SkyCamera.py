@@ -112,12 +112,13 @@ class SkyStreamClass():
                     self.send_error(404)
                     self.end_headers()
             # removes the socket error
-
+            '''
             def handle(self):
                 try:
                     BaseHTTPServer.BaseHTTPRequestHandler.handle(self)
                 except:
                     pass
+            '''
 
         class StreamingServer(SocketServer.ThreadingMixIn, HTTPServer):
             allow_reuse_address = True
@@ -130,6 +131,7 @@ class SkyStreamClass():
         #with picamera.PiCamera(resolution='1920x1080', framerate=24) as camera:
         with picamera.PiCamera(resolution='1296x730', framerate=24) as camera:
                 output = StreamingOutput()
+                camera.rotation = 270
                 camera.start_recording(output, format='mjpeg')
                 try:
                     address = ('', 443)
@@ -140,7 +142,7 @@ class SkyStreamClass():
         
         if (config.SWDEBUG):
             print ("--------------------")
-            print ("SkyStream: mjpegStream Ended (NEVER SHOULD HAPPEN)")
+            print ("SkyStream: mjpegStream Ended ")
             print ("--------------------")
         
 
@@ -159,7 +161,7 @@ class SkyStreamClass():
 
         if (config.SWDEBUG):
             print ("--------------------")
-            print ("SkyStream: Autossh Ended (NEVER SHOULD HAPPEN!) ")
+            print ("SkyStream: Autossh Ended  ")
             print ("--------------------")
         
 

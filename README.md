@@ -6,7 +6,7 @@ All documentation is on:
 
 https://shop.switchdoc.com/products/skyweather-raspberry-pi-based-weather-station-kit-for-the-cloud
 
-Version V040  - WeatherUndergound Fix, support for SHT30
+Version V041.1  -  Experimental
 
 http://www.switchdoc.com/
 

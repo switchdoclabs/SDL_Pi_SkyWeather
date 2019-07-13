@@ -14,7 +14,7 @@ try:
 except ImportError:
 	import config
 
-config.SWVERSION = "041"
+config.SWVERSION = "041.1T"
 
 
 import sys
@@ -335,10 +335,19 @@ if (config.STREAMVIDEO == False):
     except:
         config.Camera_Present = False
 else:
-    # Streaming camera is used, so we must detect differently and then start streaming
-    SkyCamera.startSkyStream()
-    config.Camera_Present = True
+    try:
 
+        with picamera.PiCamera() as cam:
+            print("Pi Camera Revision",cam.revision)
+            cam.close()
+        config.Camera_Present = True
+    except:
+        config.Camera_Present = False
+    # Streaming camera is used, so we must detect differently and then start streaming
+    if (config.Camera_Present == True):
+        SkyCamera.startSkyStream()
+    else:
+        config.STREAMVIDEO == False
 
 # semaphore primitives for preventing I2C conflicts
 
