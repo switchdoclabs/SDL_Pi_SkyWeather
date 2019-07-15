@@ -41,7 +41,7 @@ def sendWeatherUndergroundData( as3935LightningCount, as3935, as3935LastInterrup
 
 	myURL += "&rainin=%0.2f" % ((rain60Minutes)/25.4)
 	myURL += "&dailyrainin=%0.2f" % ((totalRain)/25.4)
-	myURL += "&baromin=%0.2f" % ((bmp180SeaLevel) * 0.2953)/10.0
+	myURL += "&baromin=%0.2f" % (((bmp180SeaLevel) * 0.2953)/10.0)
 
 	myURL += "&indoortempf=%0.2f" % ((HTUtemperature*9.0/5.0)+32.0)
 	myURL += "&indoorhumidity%0.2f=" % HTUhumidity
