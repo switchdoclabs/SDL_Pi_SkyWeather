@@ -225,7 +225,7 @@ class SHT30:
 
     def fast_read_humidity_temperature_crc(self):
         self._fast_read_data()
-        return (self.humidity, self.temperature, self.crc, self.crcT)
+        return (self.humidity, self.temperature, self.crcH, self.crcT)
 
     def read_status_info(self):
         return  (self.goodreads, self.badreadings, self.badcrcs, self.retrys,self.powercycles)

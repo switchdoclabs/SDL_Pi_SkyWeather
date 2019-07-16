@@ -9,13 +9,23 @@ import threading
 import os
 import sys
 
+import util
 import hashlib
 
 import io
 import logging
 import SocketServer
+
+import numpy as np
+import datetime as dt
+
 from threading import Condition
 from BaseHTTPServer import BaseHTTPRequestHandler,HTTPServer
+
+from PIL import ImageFont, ImageDraw, Image
+
+import traceback
+import StringIO
 
 # Check for user imports
 try:
@@ -97,6 +107,68 @@ class SkyStreamClass():
                             with output.condition:
                                 output.condition.wait()
                                 frame = output.frame
+                                # now add timestamp to jpeg
+                                # Convert to PIL Image
+                                cv2.CV_LOAD_IMAGE_COLOR = 1 # set flag to 1 to give colour image
+                                npframe = np.fromstring(frame, dtype=np.uint8)
+                                pil_frame = cv2.imdecode(npframe,cv2.CV_LOAD_IMAGE_COLOR)
+                                #pil_frame = cv2.imdecode(frame,-1)
+                                cv2_im_rgb = cv2.cvtColor(pil_frame, cv2.COLOR_BGR2RGB)
+                                pil_im = Image.fromarray(cv2_im_rgb)
+        
+                                draw = ImageDraw.Draw(pil_im)
+        
+                                # Choose a font
+                                font = ImageFont.truetype("/usr/share/fonts/truetype/freefont/FreeSans.ttf", 25)
+
+                                # set up units
+                                #wind
+                                val = util.returnWindSpeed(state.ScurrentWindSpeed)
+                                WindStval = "{0:0.1f}".format(val) + util.returnWindSpeedUnit()
+                                val = util.returnWindSpeed(state.ScurrentWindGust)
+                                WindGtval = "{0:0.1f}".format(val) + util.returnWindSpeedUnit()
+                                val = util.returnTemperatureCF(state.currentOutsideTemperature)
+                                OTtval = "{0:0.1f} ".format(val) + util.returnTemperatureCFUnit()
+
+                                myText = "SkyWeather   %s Wind Speed: %s Wind Gust:  %s Temp: %s " % (dt.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),WindStval, WindGtval, OTtval)
+        
+                                # Draw the text
+                                color = 'rgb(255,255,255)'
+                                #draw.text((0, 0), myText,fill = color, font=font)
+        
+                                # get text size
+                                text_size = font.getsize(myText)
+        
+                                # set button size + 10px margins
+                                button_size = (text_size[0]+20, text_size[1]+10)
+        
+                                # create image with correct size and black background
+                                button_img = Image.new('RGBA', button_size, "black")
+                             
+                                #button_img.putalpha(128)
+                                # put text on button with 10px margins
+                                button_draw = ImageDraw.Draw(button_img)
+                                button_draw.text((10, 5), myText, fill = color, font=font)
+        
+                                # put button on source image in position (0, 0)
+        
+                                pil_im.paste(button_img, (0, 0))
+                                bg_w, bg_h = pil_im.size 
+                                # WeatherSTEM logo in lower left
+                                size = 64
+                                WSLimg = Image.open("static/WeatherSTEMLogoSkyBackground.png")
+                                WSLimg.thumbnail((size,size),Image.ANTIALIAS)
+                                pil_im.paste(WSLimg, (0, bg_h-size))
+        
+                                # SkyWeather log in lower right
+                                SWLimg = Image.open("static/SkyWeatherLogoSymbol.png")
+                                SWLimg.thumbnail((size,size),Image.ANTIALIAS)
+                                pil_im.paste(SWLimg, (bg_w-size, bg_h-size))
+
+                                # Save the image
+                                buf= StringIO.StringIO()
+                                pil_im.save(buf, format= 'JPEG')
+                                frame = buf.getvalue()
                             self.wfile.write(b'--FRAME\r\n')
                             self.send_header('Content-Type', 'image/jpeg')
                             self.send_header('Content-Length', len(frame))
@@ -128,15 +200,16 @@ class SkyStreamClass():
         # remove stdout prints from disconnects
 
         #with picamera.PiCamera(resolution='640x480', framerate=24) as camera:
-        #with picamera.PiCamera(resolution='1920x1080', framerate=24) as camera:
         with picamera.PiCamera(resolution='1296x730', framerate=24) as camera:
                 output = StreamingOutput()
+                #camera.rotation = 180
                 camera.rotation = 270
                 camera.start_recording(output, format='mjpeg')
                 try:
                     address = ('', 443)
                     server = StreamingServer(address, StreamingHandler)
                     server.serve_forever()
+
                 finally:
                     camera.stop_recording()
         

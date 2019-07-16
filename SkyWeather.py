@@ -39,6 +39,7 @@ import updateBlynk
 
 import state
 
+import traceback
 
 sys.path.append('./TSL2591')
 sys.path.append('./SDL_Pi_SI1145')
@@ -673,11 +674,16 @@ except IOError as e:
 
 
 if (config.AS3935_Present == True):
+            try:
                 #i2ccommand = "sudo i2cdetect -y 1"
                 #output = subprocess.check_output (i2ccommand,shell=True, stderr=subprocess.STDOUT )
                 #print output
                 as3935.set_noise_floor(0)
                 as3935.calibrate(tun_cap=0x0F)
+            except IOError as e:
+
+           	print "I/O error({0}): {1}".format(e.errno, e.strerror)
+               	config.AS3935_Present = False
 
 # back to BUS0
 if (config.TCA9545_I2CMux_Present):
@@ -734,10 +740,10 @@ try:
 
 except:
         config.SHT30_Present = False
+        traceback.print_exc() 
 
 
 
-print "after SHT30"
 
 ##############
 # Setup AM2315
