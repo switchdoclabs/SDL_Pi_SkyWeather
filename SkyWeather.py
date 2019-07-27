@@ -14,11 +14,12 @@ try:
 except ImportError:
 	import config
 
-config.SWVERSION = "040"
+config.SWVERSION = "041"
 
 
 import sys
 import time
+import traceback
 
 from datetime import datetime
 
@@ -719,8 +720,13 @@ try:
         if (crc_checkH == -1) or (crc_checkT == -1):
         	config.SHT30_Present = False
 
-except:
+except Exception as e:
+
         config.SHT30_Present = False
+
+        print "exception in SHT30 Check"
+        print(traceback.format_exc())
+        print (e)
 
 
 

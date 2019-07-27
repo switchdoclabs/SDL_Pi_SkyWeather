@@ -6,10 +6,11 @@ All documentation is on:
 
 https://shop.switchdoc.com/products/skyweather-raspberry-pi-based-weather-station-kit-for-the-cloud
 
-Version V040  - WeatherUndergound Fix, support for SHT30
+Version V041  - WeatherUndergound Fix, support for SHT30
 
 http://www.switchdoc.com/
 
+July 27, 2019:    Version 041 - Fix to SHT30 for > 122 degrees 
 July 8, 2019:    Version 040 - WeatherUnderground Fix, Support for SHT30- Must update conflocal.py if used<BR>
 June 5, 2019:    Version 039 - AM2315 Reliablity Fix <BR>
 May 21, 2019:    Version 038 - Blynk Bug Fix<BR>

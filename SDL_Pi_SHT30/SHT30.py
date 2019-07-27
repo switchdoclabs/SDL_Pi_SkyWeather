@@ -20,7 +20,7 @@ SHT30_READREG = 0x00
 MAXREADATTEMPT = 10
 SHT30_POLYNOMIAL = 0x131  # P(x) = x^8 + x^5 + x^4 + 1 = 100110001
 
-SHT30DEBUG = False
+SHT30DEBUG = True
 
 class SHT30:
     """Base functionality for SHT30 humidity and temperature sensor. """
@@ -118,9 +118,21 @@ class SHT30:
                 time.sleep(0.5)
                 tmp = self._device.read_i2c_block_data(SHT30_I2CADDR,SHT30_READREG,6)
 
-                TRaw = (((tmp[0] & 0x7F) << 8) | tmp[1]) 
+                #TRaw = (((tmp[0] & 0x7F) << 8) | tmp[1]) 
+                TRaw = (((tmp[0] ) << 8) | tmp[1]) 
                 HRaw = ((tmp[3] << 8) | tmp[4]) 
-                self.temperature = ((TRaw * 175) / 65535.0) - 45
+                if (SHT30DEBUG == True):
+                    print "TRaw = ", hex(TRaw)
+                    print "TRaw = ", (TRaw)
+                    print "tmp[0] = ", hex(tmp[0])
+                    print "tmp[1] = ", hex(tmp[1])
+                    print "tmp[0] = ", (tmp[0])
+                    print "tmp[1] = ", (tmp[1])
+                    print "tmp[0] & 0x7F", hex(tmp[0] & 0x7F)
+                    print "TRaw*175/65535.0 = ", TRaw*175.0/65535.0 
+                    print "TRaw*175/65535.0)-45 = ", (TRaw*175.0/65535.0 )-45
+
+                self.temperature = ((TRaw * 175.0) / 65535.0) - 45
                 self.humidity = 100 * (HRaw) / 65535.0
 
                 self.crcT = tmp[2]
@@ -172,7 +184,8 @@ class SHT30:
                         count = 0 
             
         # GET THE DATA OUT OF THE LIST WE READ
-        TRaw = (((tmp[0] & 0x7F) << 8) | tmp[1]) 
+        #TRaw = (((tmp[0] & 0x7F) << 8) | tmp[1]) 
+        TRaw = (((tmp[0]) << 8) | tmp[1]) 
         HRaw = ((tmp[3] << 8) | tmp[4]) 
         self.temperature = ((TRaw * 175) / 65535.0) - 45
         self.humidity = 100 * (HRaw) / 65535.0
@@ -225,7 +238,7 @@ class SHT30:
 
     def fast_read_humidity_temperature_crc(self):
         self._fast_read_data()
-        return (self.humidity, self.temperature, self.crc, self.crcT)
+        return (self.humidity, self.temperature, self.crcH, self.crcT)
 
     def read_status_info(self):
         return  (self.goodreads, self.badreadings, self.badcrcs, self.retrys,self.powercycles)
