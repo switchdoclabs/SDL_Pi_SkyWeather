@@ -1,6 +1,13 @@
 #!/usr/bin/env python
 import sys
 
+# Check for user imports
+try:
+            import conflocal as config
+except ImportError:
+            import config
+
+
 sys.path.append('./SDL_Pi_TCA9545')
 sys.path.append('./RaspberryPi-AS3935/RPi_AS3935')
 
@@ -59,10 +66,25 @@ GPIO.setmode(GPIO.BCM)
 # sensor. (Common implementations are in README.md)
 sensor = RPi_AS3935(address=0x02, bus=1)
 
+#set values for lightning
+# format: [NoiseFloor, Indoor, TuneCap, DisturberDetection, WatchDogThreshold, SpikeDetection]
+# default: [2,1,7,0,3,3]
+NoiseFloor = config.AS3935_Lightning_Config[0]
+Indoor = config.AS3935_Lightning_Config[1]
+TuneCap = config.AS3935_Lightning_Config[2]
+DisturberDetection = config.AS3935_Lightning_Config[3]
+WatchDogThreshold = config.AS3935_Lightning_Config[4]
+SpikeDetection = config.AS3935_Lightning_Config[5]
+
+
+
 try:
-    sensor.set_indoors(True)
-    sensor.set_noise_floor(0)
-    sensor.calibrate(tun_cap=0x0F)
+    sensor.set_noise_floor(NoiseFloor)
+    sensor.set_indoors(Indoor)
+    sensor.calibrate(tun_cap=TuneCap)
+    sensor.set_mask_disturber(DisturberDetection)
+    sensor.set_watchdog_threshold(WatchDogThreshold)
+    sensor.set_spike_detection(SpikeDetection)
 except:
     print "AS3935 NOT detected at I2C port 0x02 on base Bus"
     exit()

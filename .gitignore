@@ -9,4 +9,4 @@ nohup.out
 conflocal.py
 state/EnglishMetric.txt
 static/SkyCamera.py
-static/*.png
+static/*.jpg

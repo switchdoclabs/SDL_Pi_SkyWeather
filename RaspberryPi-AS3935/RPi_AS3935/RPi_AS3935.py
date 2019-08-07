@@ -77,6 +77,19 @@ class RPi_AS3935:
         write_data = (self.registers[0x01] & 0x8F) + noisefloor
         self.set_byte(0x01, write_data)
 
+
+    def set_watchdog_threshold(self, threshold):
+        self.read_data()
+        threshold = (threshold & 0x0F) 
+        write_data = (self.registers[0x01] & 0xF0) + threshold
+        self.set_byte(0x01, write_data)
+
+    def set_spike_detection(self, threshold):
+        self.read_data()
+        threshold = (threshold & 0x0F) 
+        write_data = (self.registers[0x02] & 0xF0) + threshold
+        self.set_byte(0x02, write_data)
+
     def lower_noise_floor(self, min_noise=0):
         """Lower the noise floor by one step.
 

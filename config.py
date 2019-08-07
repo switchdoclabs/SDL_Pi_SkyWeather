@@ -1,14 +1,14 @@
 
 #
 #
-# configuration file - contains customization for exact system
+# configuration file - contains customization for SkyWeather system
 #
 
 # it is a good idea to copy this file into a file called "conflocal.py" and edit that instead of this one.  This file is wiped out if you update SkyWeather.
 
 SWDEBUG = False
 
-SWVERSION = "0.0"
+SWVERSION = "000" # set in SkyWeather.py
 import uuid 
   
 # printing the value of unique MAC 
@@ -61,6 +61,12 @@ WeatherUnderground_StationKey = "YYYYYYY"
 USEBLYNK = False 
 BLYNK_AUTH = 'xxxxx'
 BLYNK_URL = 'http://blynk-cloud.com/'
+
+############
+# AS3935 Lightning Configuration
+############
+# format: [NoiseFLoor, Indoor, TuneCap, DisturberDetection, WatchDogThreshold, SpikeDetection]
+AS3935_Lightning_Config = [2,1,3,0,3,3]
 
 
 

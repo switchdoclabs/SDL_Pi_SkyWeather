@@ -14,7 +14,7 @@ try:
 except ImportError:
 	import config
 
-config.SWVERSION = "041"
+config.SWVERSION = "042"
 
 
 import sys
@@ -631,11 +631,30 @@ if (config.TCA9545_I2CMux_Present):
 
 as3935 = RPi_AS3935(address=0x02, bus=1)
 
-IndoorOutdoor = True # True means outdoor
+#set values for lightning
+# format: [NoiseFloor, Indoor, TuneCap, DisturberDetection, WatchDogThreshold, SpikeDetection]
+# default: [2,1,7,0,3,3]
+NoiseFloor = config.AS3935_Lightning_Config[0]
+Indoor = config.AS3935_Lightning_Config[1]
+TuneCap = config.AS3935_Lightning_Config[2]
+DisturberDetection = config.AS3935_Lightning_Config[3]
+WatchDogThreshold = config.AS3935_Lightning_Config[4]
+SpikeDetection = config.AS3935_Lightning_Config[5]
+
+
+
 try:
 
                 print "as3935 start"
-                as3935.set_indoors(IndoorOutdoor)
+
+                as3935.set_noise_floor(NoiseFloor)
+                as3935.set_indoors(Indoor)
+                as3935.calibrate(tun_cap=TuneCap)
+                as3935.set_mask_disturber(DisturberDetection)
+                as3935.set_watchdog_threshold(WatchDogThreshold)
+                as3935.set_spike_detection(SpikeDetection)
+
+
                 config.AS3935_Present = True
                 print "as3935 present at 0x02"
 		#process_as3935_interrupt()
@@ -648,7 +667,13 @@ except IOError as e:
 
         	try:
 
-                	as3935.set_indoors(IndoorOutdoor)
+                        as3935.set_noise_floor(NoiseFloor)
+                        as3935.set_indoors(Indoor)
+                        as3935.calibrate(tun_cap=TuneCap)
+                        as3935.set_mask_disturber(DisturberDetection)
+                        as3935.set_watchdog_threshold(WatchDogThreshold)
+                        as3935.set_spike_detection(SpikeDetection)
+
                 	config.AS3935_Present = True
                 	#print "as3935 present"
         	except IOError as e:
@@ -660,12 +685,6 @@ except IOError as e:
         		 	tca9545.write_control_register(TCA9545_CONFIG_BUS0)
 
 
-if (config.AS3935_Present == True):
-                #i2ccommand = "sudo i2cdetect -y 1"
-                #output = subprocess.check_output (i2ccommand,shell=True, stderr=subprocess.STDOUT )
-                #print output
-                as3935.set_noise_floor(0)
-                as3935.calibrate(tun_cap=0x0F)
 
 # back to BUS0
 if (config.TCA9545_I2CMux_Present):
@@ -1703,6 +1722,8 @@ sampleAndDisplay()
 
 # test SkyWeather
 
+print ("taking SkyPicture")
+SkyCamera.takeSkyPicture()
 #print ("sending SkyCamera")
 #SkyCamera.sendSkyWeather()
 

@@ -20,7 +20,7 @@ SHT30_READREG = 0x00
 MAXREADATTEMPT = 10
 SHT30_POLYNOMIAL = 0x131  # P(x) = x^8 + x^5 + x^4 + 1 = 100110001
 
-SHT30DEBUG = True
+SHT30DEBUG = False
 
 class SHT30:
     """Base functionality for SHT30 humidity and temperature sensor. """
