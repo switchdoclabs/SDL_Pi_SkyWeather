@@ -6,10 +6,15 @@ All documentation is on:
 
 https://shop.switchdoc.com/products/skyweather-raspberry-pi-based-weather-station-kit-for-the-cloud
 
-Version V042  - Overlays, Lightning Params added
+Version V043  - Minor Bug fixes<BR>
+- Improved AM2315 Detection and SHT30 Priority set above AM2315 <BR>
+- SQL Structure Fixed <BR>
+- SkyCamera time and date changed<BR>
+- debug for overexposure <BR>
 
 http://www.switchdoc.com/
 
+August 8, 2019:  Version 043 - Improved AM2315 Detection, SQL Structure Fixed, time and date changed, debug for overexposure <BR>
 August 6, 2019:  Version 042 - Overlays, Lightning Params added - Must update conflocal.py if used<BR>
 July 27, 2019:   Version 041 - Fix to SHT30 for > 122 degrees <BR>
 July 8, 2019:    Version 040 - WeatherUnderground Fix, Support for SHT30- Must update conflocal.py if used<BR>

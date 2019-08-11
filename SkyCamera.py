@@ -43,9 +43,9 @@ def takeSkyPicture():
         # Camera warm-up time
 
 
-        val = time.strftime("SkyWeather: %Y-%m-%d %H:%M:%S")  
 
         camera.capture('static/skycamera.jpg')
+        camera.capture('static/skycamera-raw.jpg')
 
         # now add timestamp to jpeg
         pil_im = Image.open('static/skycamera.jpg')
@@ -64,8 +64,8 @@ def takeSkyPicture():
         val = util.returnTemperatureCF(state.currentOutsideTemperature)
         OTtval = "{0:0.1f} ".format(val) + util.returnTemperatureCFUnit()
 
-        myText = "SkyWeather   %s Wind Speed: %s Wind Gust:  %s Temp: %s " % (dt.datetime.now().strftime('%Y-%m-%d %H:%M:%S'),WindStval, WindGtval, OTtval)
-        
+        myText = "SkyWeather %s Wind Speed: %s Wind Gust: %s Temp: %s " % (dt.datetime.now().strftime('%d-%b-%Y %H:%M:%S'),WindStval, WindGtval, OTtval)
+
         # Draw the text
         color = 'rgb(255,255,255)'
         #draw.text((0, 0), myText,fill = color, font=font)

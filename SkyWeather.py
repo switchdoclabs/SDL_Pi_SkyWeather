@@ -743,13 +743,14 @@ except Exception as e:
 
         config.SHT30_Present = False
 
-        print "exception in SHT30 Check"
-        print(traceback.format_exc())
-        print (e)
+        #print "exception in SHT30 Check"
+        #print(traceback.format_exc())
+        #print (e)
 
 
 
 print "after SHT30"
+
 
 ##############
 # Setup AM2315
@@ -759,67 +760,34 @@ if (config.TCA9545_I2CMux_Present):
 
 # Grove Power Save Pins for device reset
 
+if (config.SHT30_Present == False):  # don't check for AM2315 if you find SHT30
 
-###############
+    ###############
 
-# Detect AM2315
-outsideHumidity = 0.0
-outsideTemperature = 0.0
-crc_check = -1
-import AM2315
-try:
- 	am2315 = AM2315.AM2315(powerpin=config.AM2315GSPIN )
-	#outsideHumidity, outsideTemperature, crc_check = am2315.read_humidity_temperature_crc() 
-	outsideHumidity, outsideTemperature, crc_check = am2315.fast_read_humidity_temperature_crc() 
-	print "outsideTemperature: %0.1f C" % outsideTemperature
-    	print "outsideHumidity: %0.1f %%" % outsideHumidity
-        state.currentOutsideTemperature = outsideTemperature
-        state.currentOutsideHumidity = outsideHumidity
-        print "crc: 0x%02x" % crc_check
-        config.AM2315_Present = True
-        if (crc_check == -1):
-        	config.AM2315_Present = False
+    # Detect AM2315
+    outsideHumidity = 0.0
+    outsideTemperature = 0.0
+    crc_check = -1
+    import AM2315
+    try:
+ 	    am2315 = AM2315.AM2315(powerpin=config.AM2315GSPIN )
+	    outsideHumidity, outsideTemperature, crc_check = am2315.read_humidity_temperature_crc() 
+	    #outsideHumidity, outsideTemperature, crc_check = am2315.fast_read_humidity_temperature_crc() 
+	    print "outsideTemperature: %0.1f C" % outsideTemperature
+    	    print "outsideHumidity: %0.1f %%" % outsideHumidity
+            state.currentOutsideTemperature = outsideTemperature
+            state.currentOutsideHumidity = outsideHumidity
+            print "crc: 0x%02x" % crc_check
+            config.AM2315_Present = True
+            if (crc_check == -1):
+        	    config.AM2315_Present = False
 
-except:
-        config.AM2315_Present = False
-
-
-
-
-'''
-	# Check for our commands
-	#pclogging.log(pclogging.INFO, __name__, "Command %s Recieved" % command)
-
-	print "Processing Command: ", command
-	if (command == "SAMPLEWEATHER"):
-		sampleWeather()
-		completeCommand()
-	    	writeWeatherStats()
-		return True
-
-	if (command == "SAMPLEBOTH"):
-		sampleWeather()
-		completeCommand()
-	    	writeWeatherStats()
-		sampleSunAirPlus()
-	    	writeSunAirPlusStats()
-		return True
-
-	if (command == "SAMPLEBOTHGRAPHS"):
-		sampleWeather()
-		completeCommand()
-	    	writeWeatherStats()
-		sampleSunAirPlus()
-	    	writeSunAirPlusStats()
-		doAllGraphs.doAllGraphs()
-		return True
-			
-			
-			
-	completeCommand()
+    except:
+            config.AM2315_Present = False
 
 
-'''
+
+
 
 # Main Program
 
