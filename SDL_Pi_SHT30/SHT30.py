@@ -79,7 +79,7 @@ class SHT30:
         time.sleep(0.5)
         tmp = self._device.read_i2c_block_data(SHT30_I2CADDR,SHT30_READREG,6)
         print "tmp=", tmp
-        TRaw = (((tmp[0] & 0x7F) << 8) | tmp[1]) 
+        TRaw = (((tmp[0] ) << 8) | tmp[1]) 
         HRaw = ((tmp[3] << 8) | tmp[4]) 
         self.temperature = ((TRaw * 175) / 65535.0) - 45
         self.humidity = 100 * (HRaw) / 65535.0
