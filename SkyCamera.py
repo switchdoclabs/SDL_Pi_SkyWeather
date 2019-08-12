@@ -100,6 +100,7 @@ def takeSkyPicture():
 
         # Save the image
         pil_im.save('static/skycamera.jpg', format= 'JPEG')
+        pil_im.save('static/skycameraprocessed.jpg', format= 'JPEG')
 
         time.sleep(2)
 
