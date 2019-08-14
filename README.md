@@ -43,7 +43,8 @@ diff conflocal.py config.py
 Add the new config.py variables into your conflocal.py version for compatiblity
 
 
------------------
+-----------------<BR>
+
 Install this for smbus:
 
 sudo apt-get install python-smbus
