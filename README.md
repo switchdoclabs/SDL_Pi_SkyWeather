@@ -6,11 +6,12 @@ All documentation is on:
 
 https://shop.switchdoc.com/products/skyweather-raspberry-pi-based-weather-station-kit-for-the-cloud
 
-Version V044  - Camera Debug Support - Overexposure problem<BR>
+Version V045  - Further Camera Debug Support - SolarMAX support added - Must update conflocal.py<BR>
 
 http://www.switchdoc.com/
 
-August 12, 2019: Version 043 - Camera Debug Support - Overexposure problem<BR>
+August 14, 2019: Version 045 - Camera Debug Support - SolarMAX support - Must update conflocal.py<BR>
+August 12, 2019: Version 044 - Camera Debug Support - Overexposure problem<BR>
 August 8, 2019:  Version 043 - Improved AM2315 Detection, SQL Structure Fixed, time and date changed, debug for overexposure <BR>
 August 6, 2019:  Version 042 - Overlays, Lightning Params added - Must update conflocal.py if used<BR>
 July 27, 2019:   Version 041 - Fix to SHT30 for > 122 degrees <BR>

@@ -14,7 +14,7 @@ try:
 except ImportError:
 	import config
 
-config.SWVERSION = "043"
+config.SWVERSION = "045"
 
 
 import sys
@@ -108,7 +108,7 @@ config.OLED_Present = False
 config.WXLink_Present = False
 config.Sunlight_Present = False
 config.TSL2591_Present = False
-
+config.SolarMax_Present = False
 
 # if the WXLink has stopped transmitting, == False
 config.WXLink_Data_Fresh = False
@@ -873,26 +873,41 @@ def sampleWeather():
 			currentWindDirection = weatherStation.current_wind_direction()
 			currentWindDirectionVoltage = weatherStation.current_wind_direction_voltage()
 	else:
+
 		# WXLink Data Gathering
                 #pay attention to semaphore in case new block is coming in
 
 	        returnList = readLoRa.readWXLink(state.block1, state.block2, state.stringblock1, state.stringblock2, state.block1_orig, state.block2_orig)
 
-  		
+                  	
+                if (len(returnList) > 0):
+                    # OK, clear blocks - we have interpreted them
+                    state.block1 = []
+                    state.block2 = []
+                    state.stringblock1 = ""
+                    state.stringblock2 = ""
+                    state.block1_orig = []
+                    state.block2_orig = []
+
+
+                    protocol_ID = returnList[0]
+
+                    if (protocol_ID == 3):   # WXLink Packet
  	
-		if (len(returnList) > 0):		
+                      if ((config.Dual_MAX_WXLink == True) or (config.SolarMAX_Present == False)):
+		
 		
 	
-			currentWindSpeed = returnList[2]
+			currentWindSpeed = returnList[3]
   			currentWindGust = 0.0 # not supported
-  			totalRain = returnList[4]
-			currentWindDirection = returnList[5]
+  			totalRain = returnList[5]
+			currentWindDirection = returnList[6]
 			currentWindDirectionVoltage =  0.0 # not supported
 
-    			outsideTemperature = returnList[6]
-    			outsideHumidity = returnList[7]
+    			outsideTemperature = returnList[7]
+    			outsideHumidity = returnList[8]
 
-                        if (config.SunAirPlus_Present == False): # if SunAirPlus not here, use WXLink data
+                        if ((config.SunAirPlus_Present == False) and (config.SolarMAX_Present == False)): # if SunAirPlus or SolarMAX not here, use WXLink data
                             state.batteryVoltage = state.WXbatteryVoltage 
                             state.batteryCurrent = state.WXbatteryCurrent
                             state.solarVoltage = state.WXsolarVoltage
@@ -906,8 +921,13 @@ def sampleWeather():
                         if (config.USEBLYNK):
                             if (config.WXLink_Data_Fresh == True):
                                 updateBlynk.blynkStatusTerminalUpdate("WXLink ID# %d recieved"%config.WXLink_LastMessageID)
+                    else:
+                        if (protocol_ID == 8): # do SolarMAX
+                                pass # variable setting done in readLoRa
+
 
 		else:
+                    if (config.WXLink_Present == True):
 			currentWindSpeed = state.ScurrentWindSpeed  
   			currentWindGust = 0.0 # not supported
   			totalRain = state.currentTotalRain
@@ -916,7 +936,6 @@ def sampleWeather():
 
     			outsideTemperature = state.currentOutsideTemperature
     			outsideHumidity = state.currentOutsideHumidity
-
 			# checks for issue on startup
 			if ((len(state.block1) == 0) or (len(state.block2) == 0)):
 
@@ -933,7 +952,6 @@ def sampleWeather():
 			print "Bad data from WXLink, discarded new data.  Kept old"
 		
         print "----------------- "
-
   
 	if (config.BMP280_Present):	
 		try:
@@ -1037,7 +1055,7 @@ def sampleWeather():
 		as3935InterruptStatus = "No AS3935 Lightning Detector Present"
 		as3935LastInterrupt = 0x00
 		
-	if (config.WXLink_Present == False): # do not use internal AM2315 or SHT30 if we are WXLink connected
+	if (config.WXLink_Present == False) : # do not use internal AM2315 or SHT30 if we are WXLink connected
            # if both AM2315 and SHT30 are present, SHT30 wins
 	   if (config.AM2315_Present) and ( config.SHT30_Present == False):
 		# get AM2315 Outside Humidity and Outside Temperature
@@ -1079,6 +1097,49 @@ def sampleWeather():
 	        if (config.SWDEBUG == True):
                     print "SHT30 Stats: (g,br,bc,rt,pc)", sht30.read_status_info()
 
+        else:   # WXLink == True if SolarMAX is here and WXLink is not, the read AM2315/SHT30
+            if ((config.SolarMAX_Present == True) and (config.Dual_MAX_WXLink == False)):
+
+                # if both AM2315 and SHT30 are present, SHT30 wins
+	        if (config.AM2315_Present) and ( config.SHT30_Present == False):
+		        # get AM2315 Outside Humidity and Outside Temperature
+		        # turn I2CBus 0 on
+ 		        if (config.TCA9545_I2CMux_Present):
+        		        tca9545.write_control_register(TCA9545_CONFIG_BUS0)
+
+                        try:
+    		            ToutsideHumidity, ToutsideTemperature, crc_check = am2315.read_humidity_temperature_crc()
+                        except:
+                            if am2315 is None:
+		                am2315 = AM2315.AM2315(powerpin=config.AM2315GSPIN )
+                                print ("am2315 None Error Detected")
+                            crc_check = -1
+        
+		        if (crc_check !=  -1):
+                            outsideTemperature = ToutsideTemperature
+                            outsideHumidity = ToutsideHumidity
+                            state.currentOutsideTemperature = outsideTemperature
+                            state.currentOutsideHumidity = outsideHumidity
+	                if (config.SWDEBUG == True):
+                            print "AM2315 Stats: (g,br,bc,rt,pc)", am2315.read_status_info()
+
+                # if both AM2315 and SHT30 are present, SHT30 wins
+	        if (config.SHT30_Present):
+		        # get SHT30 Outside Humidity and Outside Temperature
+		        # turn I2CBus 0 on
+ 		        if (config.TCA9545_I2CMux_Present):
+        		        tca9545.write_control_register(TCA9545_CONFIG_BUS0)
+        
+    		        ToutsideHumidity, ToutsideTemperature, crc_checkH, crc_checkT = sht30.read_humidity_temperature_crc()
+                     
+        
+		        if (crc_checkH !=  -1) and (crc_checkT != -1):
+                            outsideTemperature = ToutsideTemperature
+                            outsideHumidity = ToutsideHumidity
+                            state.currentOutsideTemperature = outsideTemperature
+                            state.currentOutsideHumidity = outsideHumidity
+	                if (config.SWDEBUG == True):
+                            print "SHT30 Stats: (g,br,bc,rt,pc)", sht30.read_status_info()
 
 	if (config.WeatherUnderground_Present == True):
 
@@ -1642,10 +1703,12 @@ print returnStatusLine("ADS1115",config.ADS1115_Present)
 print returnStatusLine("AS3935",config.AS3935_Present)
 print returnStatusLine("OLED",config.OLED_Present)
 print returnStatusLine("SunAirPlus/SunControl",config.SunAirPlus_Present)
+print returnStatusLine("SolarMAX",config.SolarMAX_Present)
 print returnStatusLine("SI1145 Sun Sensor",config.Sunlight_Present)
 print returnStatusLine("TSL2591 Sun Sensor",config.TSL2591_Present)
 print returnStatusLine("DustSensor",config.DustSensor_Present)
 print returnStatusLine("WXLink",config.WXLink_Present)
+print returnStatusLine("Dual SolarMAX/WXLink",config.Dual_MAX_WXLink)
 print
 print returnStatusLine("UseBlynk",config.USEBLYNK)
 print returnStatusLine("UseMySQL",config.enable_MySQL_Logging)
@@ -1727,7 +1790,7 @@ if (config.runLEDs):
 
 # every 5 minutes, push data to mysql and check for shutdown
 
-if (config.WXLink_Present):
+if (config.WXLink_Present)or (config.SolarMAX_Present):
 	scheduler.add_job(readLoRa.readRawWXLink, 'interval', seconds=15)
 
 

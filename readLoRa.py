@@ -24,24 +24,29 @@ crcCalc = crcpython2.CRCCCITT(version='XModem')
 
 
 def readWXLink(block1, block2, stringblock1, stringblock2, block1_orig, block2_orig):
-
-                oldblock1 = block1
-                oldblock2 = block2
-
+     if (config.SWDEBUG):
+        print "Starting readWXLink"
+     #oldblock1 = block1
+     #oldblock2 = block2
+     try:
 		if ((len(block1) > 0) and (len(block2) > 0)):
 			# check crc for errors - don't update data if crc is bad
-		
+                        if (config.SWDEBUG):
+                            print ("block1 length=", len(block1))	
+                            print ("block2 length=", len(block2))	
 			#get crc from data
 			receivedCRC = struct.unpack('H', str(block2[29:31]))[0]
-			#swap bytes for recievedCRC
+			#swap bytes for receivedCRC
 			receivedCRC = (((receivedCRC)>>8) | ((receivedCRC&0xFF)<<8))&0xFFFF
-			print "ReversedreceivedCRC= %x" % receivedCRC
-			print "length of stb1+sb2=", len(stringblock1+stringblock2)
-                	print ''.join('{:02x}'.format(ord(x)) for x in stringblock1)
-                	print ''.join('{:02x}'.format(ord(x)) for x in stringblock2)
+                        if (config.SWDEBUG):
+			    print "ReversedreceivedCRC= %x" % receivedCRC
+			    print "length of stb1+sb2=", len(stringblock1+stringblock2)
+                	    print ''.join('{:02x}'.format(ord(x)) for x in stringblock1)
+                	    print ''.join('{:02x}'.format(ord(x)) for x in stringblock2)
 			calculatedCRC = crcCalc.calculate(block1+block2[0:27])	
 			
-			print "calculatedCRC = %x " % calculatedCRC 
+                        if (config.SWDEBUG):
+			    print "calculatedCRC = %x " % calculatedCRC 
 
 			# check for start bytes, if not present, then invalidate CRC
 
@@ -49,77 +54,188 @@ def readWXLink(block1, block2, stringblock1, stringblock2, block1_orig, block2_o
 				calculatedCRC = receivedCRC + 1
 
 			if (receivedCRC == calculatedCRC):
-				print "Good CRC Recived"
+                                if (config.SWDEBUG):
+			        	print "Good CRC Recived"
 
-                		currentWindSpeed = struct.unpack('f', str(block1[9:13]))[0] 
+                                # read protocol
 
-                		currentWindGust = 0.0   # not implemented in Solar WXLink version
-	
-                		totalRain = struct.unpack('l', str(block1[17:21]))[0]
-	
-                		print("Rain Total=\t%0.2f in")%(totalRain/25.4)
-                		print("Wind Speed=\t%0.2f MPH")%(currentWindSpeed/1.6)
-		
-                		currentWindDirection = struct.unpack('H', str(block1[7:9]))[0]
-                		print "Wind Direction=\t\t\t %i Degrees" % currentWindDirection
-		
-                		# now do the AM2315 Temperature
-                		temperature = struct.unpack('f', str(block1[25:29]))[0]
-                	        print "OTFloat=%x%x%x%x" %(block1[25], block1[26], block1[27], block1[28])
-				elements = [block1[29], block1[30], block1[31], block2[0]]
-                		outHByte = bytearray(elements)
-                		humidity = struct.unpack('f', str(outHByte))[0]
-                		print "AM2315 from WXLink temperature: %0.1fC" % temperature
-                		print "AM2315 from WXLink humidity: %0.1f%%" % humidity
+                                protocol_byte = block1[2]
+                                #protocol_byte = struct.unpack('B', str(block1[2:2]))[0]
+                                protocol_ID = protocol_byte / 10
+                                protocol_software_version = protocol_byte - protocol_ID*10
+                                if (config.SWDEBUG):
+                                        print("protocol_ID = ", protocol_ID)
+                                        print("protocol_software_version = ", protocol_software_version)
 
+                                # if protocol_ID == 3, then 
+                                # use if:  SolarMAX_Present == False or Dual_MAX_WXLink == True
+                                if ((protocol_ID == 3) and ((config.SolarMAX_Present == False) or (config.Dual_MAX_WXLink == True))):    # 3 is the WXLink Protocol
+
+                                    print("protocol 3 - WXLink received")
+                		    currentWindSpeed = struct.unpack('f', str(block1[9:13]))[0] 
+
+                		    currentWindGust = 0.0   # not implemented in Solar WXLink version
 
 
-                		# now read the SunAirPlus Data from WXLink
-		
-                		WXbatteryVoltage = struct.unpack('f', str(block2[1:5]))[0]
-                		WXbatteryCurrent = struct.unpack('f', str(block2[5:9]))[0]
-                		WXloadCurrent = struct.unpack('f', str(block2[9:13]))[0]
-                		WXsolarPanelVoltage = struct.unpack('f', str(block2[13:17]))[0]
-                		WXsolarPanelCurrent = struct.unpack('f', str(block2[17:21]))[0]
+                		    totalRain = struct.unpack('l', str(block1[17:21]))[0]
+    	
+                                    if (config.SWDEBUG):
+                		        print("Rain Total=\t%0.2f in")%(totalRain/25.4)
+                		        print("Wind Speed=\t%0.2f MPH")%(currentWindSpeed/1.6)
+	    	
+                		    currentWindDirection = struct.unpack('H', str(block1[7:9]))[0]
+                                    if (config.SWDEBUG):
+                		        print "Wind Direction=\t\t\t %i Degrees" % currentWindDirection
+	    	
+                		    # now do the AM2315 Temperature
+                		    temperature = struct.unpack('f', str(block1[25:29]))[0]
+                                    if (config.SWDEBUG):
+                	                print "OTFloat=%x%x%x%x" %(block1[25], block1[26], block1[27], block1[28])
+				    elements = [block1[29], block1[30], block1[31], block2[0]]
+                		    outHByte = bytearray(elements)
+                		    humidity = struct.unpack('f', str(outHByte))[0]
+                                    if (config.SWDEBUG):
+                		        print "AM2315 from WXLink temperature: %0.1fC" % temperature
+                		        print "AM2315 from WXLink humidity: %0.1f%%" % humidity
 
-		                WXbatteryPower = WXbatteryVoltage * (WXbatteryCurrent/1000)
 
-		                WXsolarPower = WXsolarPanelVoltage * (WXsolarPanelCurrent/1000)
 
-		                WXloadPower = 5.0 * (WXloadCurrent/1000)
+                		    # now read the SunAirPlus Data from WXLink
+	    	
+                		    WXbatteryVoltage = struct.unpack('f', str(block2[1:5]))[0]
+                		    WXbatteryCurrent = struct.unpack('f', str(block2[5:9]))[0]
+                		    WXloadCurrent = struct.unpack('f', str(block2[9:13]))[0]
+                		    WXsolarPanelVoltage = struct.unpack('f', str(block2[13:17]))[0]
+                		    WXsolarPanelCurrent = struct.unpack('f', str(block2[17:21]))[0]
+    
+		                    WXbatteryPower = WXbatteryVoltage * (WXbatteryCurrent/1000)
+    
+		                    WXsolarPower = WXsolarPanelVoltage * (WXsolarPanelCurrent/1000)
+    
+		                    WXloadPower = 5.0 * (WXloadCurrent/1000)
 
-		                WXbatteryCharge = util.returnPercentLeftInBattery(WXbatteryVoltage, 4.19)	
+		                    WXbatteryCharge = util.returnPercentLeftInBattery(WXbatteryVoltage, 4.19)	
 
-                		state.WXbatteryVoltage = WXbatteryVoltage 
-                		state.WXbatteryCurrent = WXbatteryCurrent
-                		state.WXloadCurrent = WXloadCurrent
-                		state.WXsolarVoltage = WXsolarPanelVoltage
-                		state.WXsolarCurrent = WXsolarPanelCurrent
-		                state.WXbatteryPower = WXbatteryPower
-		                state.WXsolarPower = WXsolarPower
-		                state.WXloadPower = WXloadPower
-		                state.WXbatteryCharge = WXbatteryCharge
+                		    state.WXbatteryVoltage = WXbatteryVoltage 
+                		    state.WXbatteryCurrent = WXbatteryCurrent
+                		    state.WXloadCurrent = WXloadCurrent
+                		    state.WXsolarVoltage = WXsolarPanelVoltage
+                		    state.WXsolarCurrent = WXsolarPanelCurrent
+		                    state.WXbatteryPower = WXbatteryPower
+		                    state.WXsolarPower = WXsolarPower
+		                    state.WXloadPower = WXloadPower
+		                    state.WXbatteryCharge = WXbatteryCharge
 
 					
-                		auxA = struct.unpack('f', str(block2[21:25]))[0]
-                                # now set state variables
+                		    auxA = struct.unpack('f', str(block2[21:25]))[0]
+                                    # now set state variables
+
+                                    if (config.SWDEBUG):
+	
+                		        print "WXLink batteryVoltage = %6.2f" % WXbatteryVoltage
+                		        print "WXLink batteryCurrent = %6.2f" % WXbatteryCurrent
+                		        print "WXLink loadCurrent = %6.2f" % WXloadCurrent
+                		        print "WXLink solarPanelVoltage = %6.2f" % WXsolarPanelVoltage
+                		        print "WXLink solarPanelCurrent = %6.2f" % WXsolarPanelCurrent
+                		        print "WXLink auxA = %6.2f" % auxA
+     	
+                		    # message ID
+                		    MessageID = struct.unpack('l', str(block2[25:29]))[0]
+                		    print "WXLink Message ID %i" % MessageID
+    
+				    if (config.WXLink_LastMessageID != MessageID):
+					    config.WXLink_Data_Fresh = True
+					    config.WXLink_LastMessageID = MessageID
+                                            if (config.SWDEBUG):
+					        print "WXLink_Data_Fresh set to True"
+                                #
+                                # use protocol 8 if SolarMAX_Present == True 
+                                if ((protocol_ID == 8) and (config.SolarMAX_Present)):    # 8 is the WXLink Protocol
+                                    ############################
+                                    ############################
+                                    ############################
+                                    ############################
+                                    print("protocol 8 - SolarMAX received")
+                                    ############################
+                                    ############################
+                                    ############################
+                                    ############################
+
+
+
+                		    # now do the inside Temperature in the SolarMAX
+                		    SolarMaxInsideTemperature = struct.unpack('f', str(block1[25:29]))[0]
+                                    if (config.SWDEBUG):
+                	                print "SMOTFloat=%x%x%x%x" %(block1[25], block1[26], block1[27], block1[28])
+				    elements = [block1[29], block1[30], block1[31], block2[0]]
+                		    outHByte = bytearray(elements)
+                		    SolarMaxInsideHumidity = struct.unpack('f', str(outHByte))[0]
+                                    if (config.SWDEBUG):
+                		        print "ITemperature from SolarMAX temperature: %0.1fC" % SolarMaxInsideTemperature
+                		        print "IHumidity from SolarMAX humidity: %0.1f%%" % SolarMaxInsideHumidity
+
+
+
+                		    # now read the SolarMax Data from packet
+                                    
+	    	
+                		    SolarMaxloadVoltage = struct.unpack('f', str(block1[21:25]))[0]
+
+                		    SolarMaxbatteryVoltage = struct.unpack('f', str(block2[1:5]))[0]
+                		    SolarMaxbatteryCurrent = struct.unpack('f', str(block2[5:9]))[0]
+                		    SolarMaxloadCurrent = struct.unpack('f', str(block2[9:13]))[0]
+                		    SolarMaxsolarPanelVoltage = struct.unpack('f', str(block2[13:17]))[0]
+                		    SolarMaxsolarPanelCurrent = struct.unpack('f', str(block2[17:21]))[0]
+    
+		                    SolarMaxbatteryPower = SolarMaxbatteryVoltage * (SolarMaxbatteryCurrent/1000)
+    
+		                    SolarMaxsolarPower = SolarMaxsolarPanelVoltage * (SolarMaxsolarPanelCurrent/1000)
+    
+		                    SolarMaxloadPower = SolarMaxloadVoltage * (SolarMaxloadCurrent/1000)
+
+		                    SolarMaxbatteryCharge = util.returnPercentLeftInBattery(SolarMaxbatteryVoltage, 4.19)	
+
+                		    state.batteryVoltage = SolarMaxbatteryVoltage 
+                		    state.batteryCurrent = SolarMaxbatteryCurrent
+                		    state.loadCurrent = SolarMaxloadCurrent
+                		    state.loadVoltage = SolarMaxloadCurrent
+                		    state.solarVoltage = SolarMaxsolarPanelVoltage
+                		    state.solarCurrent = SolarMaxsolarPanelCurrent
+		                    state.batteryPower = SolarMaxbatteryPower
+		                    state.solarPower = SolarMaxsolarPower
+		                    state.loadPower = SolarMaxloadPower
+		                    state.batteryCharge = SolarMaxbatteryCharge
+
+					
+                		    auxA = struct.unpack('f', str(block2[21:25]))[0]
+                                    # now set state variables
 
 	
-                		print "WXLink batteryVoltage = %6.2f" % WXbatteryVoltage
-                		print "WXLink batteryCurrent = %6.2f" % WXbatteryCurrent
-                		print "WXLink loadCurrent = %6.2f" % WXloadCurrent
-                		print "WXLink solarPanelVoltage = %6.2f" % WXsolarPanelVoltage
-                		print "WXLink solarPanelCurrent = %6.2f" % WXsolarPanelCurrent
-                		print "WXLink auxA = %6.2f" % auxA
-	
-                		# message ID
-                		MessageID = struct.unpack('l', str(block2[25:29]))[0]
-                		print "WXLink Message ID %i" % MessageID
+                                    if (config.SWDEBUG):
+                		        print "SolarMax batteryVoltage = %6.2f" % SolarMaxbatteryVoltage
+                		        print "SolarMax batteryCurrent = %6.2f" % SolarMaxbatteryCurrent
+                		        print "SolarMax loadVoltage = %6.2f" % SolarMaxloadVoltage
+                		        print "SolarMax loadCurrent = %6.2f" % SolarMaxloadCurrent
+                		        print "SolarMax solarPanelVoltage = %6.2f" % SolarMaxsolarPanelVoltage
+                		        print "SolarMax solarPanelCurrent = %6.2f" % SolarMaxsolarPanelCurrent
+                		        print "SolarMax auxA = %6.2f" % auxA
+     	
+                		    # message ID
+                		    MessageID = struct.unpack('l', str(block2[25:29]))[0]
+                		    print "SolarMax Message ID %i" % MessageID
+    
+                                    if (config.SolarMAX_Present == True):
+                                        if (config.USEBLYNK):
+                                            if (config.WXLink_Data_Fresh == True):
+                                                updateBlynk.blynkStatusTerminalUpdate("SolarMAX ID# %d received"%config.WXLink_LastMessageID)
 
-				if (config.WXLink_LastMessageID != MessageID):
-					config.WXLink_Data_Fresh = True
-					config.WXLink_LastMessageID = MessageID
-					print "WXLink_Data_Fresh set to True"
+                                if ((protocol_ID == 3) or (protocol_ID == 8)):
+                                        pass
+                                else:
+                                    if (config.SWDEBUG):
+				        print "unknown protocol received.  Protocol = ", protocol_ID
+				    return []
+
 
 			else:
 				print "Bad CRC Received"
@@ -129,31 +245,40 @@ def readWXLink(block1, block2, stringblock1, stringblock2, block1_orig, block2_o
 			return []
 	
 		# return list
-		returnList = []
-		returnList.append(block1_orig) 
-		returnList.append(block2_orig) 
-		returnList.append(currentWindSpeed) 
-		returnList.append(currentWindGust) 
-		returnList.append(totalRain) 
-		returnList.append(currentWindDirection) 
-		returnList.append(temperature) 
-		returnList.append(humidity) 
-		returnList.append(WXbatteryVoltage) 
-		returnList.append(WXbatteryCurrent) 
-		returnList.append(WXloadCurrent) 
-		returnList.append(WXsolarPanelVoltage) 
-		returnList.append(WXsolarPanelCurrent) 
-		returnList.append(auxA) 
-		returnList.append(MessageID) 
+
+                if (protocol_ID == 3):  # WXlink
+		    returnList = []
+                    returnList.append(protocol_ID)
+		    returnList.append(block1_orig) 
+		    returnList.append(block2_orig) 
+		    returnList.append(currentWindSpeed) 
+		    returnList.append(currentWindGust) 
+		    returnList.append(totalRain) 
+		    returnList.append(currentWindDirection) 
+		    returnList.append(temperature) 
+		    returnList.append(humidity) 
+		    returnList.append(WXbatteryVoltage) 
+		    returnList.append(WXbatteryCurrent) 
+		    returnList.append(WXloadCurrent) 
+		    returnList.append(WXsolarPanelVoltage) 
+		    returnList.append(WXsolarPanelCurrent) 
+		    returnList.append(auxA) 
+		    returnList.append(MessageID) 
+                else:
+                    returnList = []   # protocol 8 - SolarMAX
+                    returnList.append(protocol_ID)
 
 		return returnList
-
+     except:
+         print("LoRa Packet Decode Failure - probably short block receive")
+         return []
 
 def readRawWXLink():
             
 		
 		if state.ll.waitRX(timeout=5):
-                        print("after WXLink waitRX")
+                        if (config.SWDEBUG):
+                            print("after WXLink waitRX")
 			data=state.ll.recv()
 			header=data[0:4]
 			msg=data[4:]
@@ -162,24 +287,30 @@ def readRawWXLink():
                         #for i in range(0,len(data)): 
                         #    print('i={:d} {:d} 0x{:X}'.format( i,data[i],data[i]))
                        
-                	print "-----------"
+                        if (config.SWDEBUG):
+                	    print "-----------"
                         block1 = msg[0:32]
-			print "block1=", block1
+                        if (config.SWDEBUG):
+			    print "block1=", block1
                         block2 = msg[32:65]
 			state.block1_orig = block1
 			state.block2_orig = block2
-			print "block2=", block2
+                        if (config.SWDEBUG):
+			    print "block2=", block2
                         state.stringblock1 = ''.join(chr(e) for e in block1)
                         state.stringblock2 = ''.join(chr(e) for e in block2[0:27]) 
 
-                	print "-----------"
-                	print "block 1"
-                	print ''.join('{:02x}'.format(x) for x in block1)
+                        if (config.SWDEBUG):
+                	    print "-----------"
+                	    print "block 1"
+                	    print ''.join('{:02x}'.format(x) for x in block1)
                 	state.block1 = bytearray(block1)
-                	print "block 2"
+                        if (config.SWDEBUG):
+                	    print "block 2"
                 	state.block2 = bytearray(block2)
-                	print ''.join('{:02x}'.format(x) for x in block2)
-                	print "-----------"
+                        if (config.SWDEBUG):
+                	    print ''.join('{:02x}'.format(x) for x in block2)
+                	    print "-----------"
 
 
                         

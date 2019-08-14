@@ -1,6 +1,14 @@
 import readLoRa
 import state
 import sys
+from datetime import datetime
+
+
+# Check for user imports
+try:
+                import conflocal as config
+except ImportError:
+                import config
 
 ################
 # WXLink Setup
@@ -38,20 +46,36 @@ try:
 	state.ll.setTxPower(13)
 	
         print('HW-Version: ', state.ll.getVersion())
-        WXLink_Present = True
+        config.WXLink_Present = True
 
 except:
-        WXLink_Present = False
+        config.WXLink_Present = False
 
 state.block1 = ""
 state.block2 = ""
 
-if (WXLink_Present):
+# for this test, we configure both WXLink and SolarMAX to receive all the messages
+
+config.SolarMAX_Present = True
+config.Dual_MAX_WXLink = True
+
+
+
+if (config.WXLink_Present):
 
     while True:
         readLoRa.readRawWXLink()
 
         readLoRa.readWXLink(state.block1, state.block2, state.stringblock1, state.stringblock2, state.block1_orig, state.block2_orig)
 
+        # OK, clear blocks - we have interpreted them
+        state.block1 = []
+        state.block2 = []
+        state.stringblock1 = ""
+        state.stringblock2 = ""
+        state.block1_orig = []
+        state.block2_orig = []
+
+        print('Tick! The time is: %s' % datetime.now())
 else:
     print("WXLink Not Found")

@@ -38,6 +38,9 @@ PingableRouterAddress = "192.168.1.1"
 
 runLEDs = False
 
+# WXLink and SolarMAX configuration
+SolarMAX_Present = False
+Dual_MAX_WXLink = False
 
 # WeatherSTEM configuration
 
