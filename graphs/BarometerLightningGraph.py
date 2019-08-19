@@ -79,7 +79,7 @@ def  BarometerLightningGraph(source,days,delay):
 		
 		ax = fig.add_subplot(111)
 		for i in range(len(s)):
-			s[i] = s[i] * 10
+			s[i] = s[i] 
 		
                 #ax.vlines(fds, -200.0, 1000.0,colors='w')
                 ax.xaxis.set_major_locator(dates.HourLocator(interval=6))

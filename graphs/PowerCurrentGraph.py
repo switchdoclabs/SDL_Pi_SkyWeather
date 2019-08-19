@@ -79,7 +79,7 @@ def  PowerCurrentGraph(source,days,delay):
 		hfmt = dates.DateFormatter('%m/%d-%H')
 
 		fig.set_facecolor('white')
-		ax = fig.add_subplot(111,axisbg = 'white')
+		ax = fig.add_subplot(111,facecolor = 'white')
 		#ax.vlines(fds, -200.0, 1000.0,colors='w')
 
 		ax.xaxis.set_major_locator(dates.HourLocator(interval=6))

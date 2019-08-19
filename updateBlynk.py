@@ -323,7 +323,7 @@ def blynkStateUpdate():
         put_body = json.dumps([val])
         r = requests.put(config.BLYNK_URL+config.BLYNK_AUTH+'/update/V62', data=put_body, headers=put_header)
         
-        val = "{0:0.1f}%".format(state.batteryCharge) 
+        val = "{0:0.1f}".format(state.batteryCharge) 
         put_body = json.dumps([val])
         r = requests.put(config.BLYNK_URL+config.BLYNK_AUTH+'/update/V56', data=put_body, headers=put_header)
         

@@ -198,7 +198,7 @@ def readWXLink(block1, block2, stringblock1, stringblock2, block1_orig, block2_o
                 		    state.batteryVoltage = SolarMaxbatteryVoltage 
                 		    state.batteryCurrent = SolarMaxbatteryCurrent
                 		    state.loadCurrent = SolarMaxloadCurrent
-                		    state.loadVoltage = SolarMaxloadCurrent
+                		    state.loadVoltage = SolarMaxloadVoltage
                 		    state.solarVoltage = SolarMaxsolarPanelVoltage
                 		    state.solarCurrent = SolarMaxsolarPanelCurrent
 		                    state.batteryPower = SolarMaxbatteryPower

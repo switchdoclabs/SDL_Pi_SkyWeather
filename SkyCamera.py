@@ -36,12 +36,12 @@ def takeSkyPicture():
         print ("--------------------")
     camera = picamera.PiCamera()
 
+    camera.exposure_mode = "auto"
     try:
         camera.rotation = 180
         #camera.rotation = 270
         camera.resolution = (1920, 1080)
         # Camera warm-up time
-
 
 
         camera.capture('static/skycamera.jpg')
