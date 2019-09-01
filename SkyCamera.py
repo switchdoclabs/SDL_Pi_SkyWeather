@@ -42,10 +42,9 @@ def takeSkyPicture():
         #camera.rotation = 270
         camera.resolution = (1920, 1080)
         # Camera warm-up time
-
+        time.sleep(2)
 
         camera.capture('static/skycamera.jpg')
-        camera.capture('static/skycamera-raw.jpg')
 
         # now add timestamp to jpeg
         pil_im = Image.open('static/skycamera.jpg')
@@ -381,6 +380,13 @@ def sendSkyWeather():
 			"name":"WXBatteryCharge",
 			"value": state.WXbatteryCharge,
                         "units" : "%"
+
+
+		},
+		{
+			"name":"SkyWeatherVersion",
+			"value": config.SWVERSION,
+                        "units" : ""
 
 
 		}

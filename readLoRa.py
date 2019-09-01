@@ -11,13 +11,16 @@ import util
 
 import crcpython2
 
+import updateBlynk
 
 try:
         import conflocal as config
 except ImportError:
         import config
 
+# change this if you have changed the SolarMAX protocol number
 
+SOLARMAXPROTOCOL = 8
 # read WXLink and return list to set variables
 crcCalc = crcpython2.CRCCCITT(version='XModem')
 
@@ -103,7 +106,7 @@ def readWXLink(block1, block2, stringblock1, stringblock2, block1_orig, block2_o
                 		    # now read the SunAirPlus Data from WXLink
 	    	
                 		    WXbatteryVoltage = struct.unpack('f', str(block2[1:5]))[0]
-                		    WXbatteryCurrent = struct.unpack('f', str(block2[5:9]))[0]
+                		    WXbatteryCurrent = -struct.unpack('f', str(block2[5:9]))[0]
                 		    WXloadCurrent = struct.unpack('f', str(block2[9:13]))[0]
                 		    WXsolarPanelVoltage = struct.unpack('f', str(block2[13:17]))[0]
                 		    WXsolarPanelCurrent = struct.unpack('f', str(block2[17:21]))[0]
@@ -150,12 +153,14 @@ def readWXLink(block1, block2, stringblock1, stringblock2, block1_orig, block2_o
 					        print "WXLink_Data_Fresh set to True"
                                 #
                                 # use protocol 8 if SolarMAX_Present == True 
-                                if ((protocol_ID == 8) and (config.SolarMAX_Present)):    # 8 is the WXLink Protocol
+                                #if (((protocol_ID == 8) or (protocol_ID == 9))and (config.SolarMAX_Present)):    # 8 is the WXLink Protocol
+                                if ((protocol_ID == SOLARMAXPROTOCOL) and (config.SolarMAX_Present)):    # 8 is the WXLink Protocol
                                     ############################
                                     ############################
                                     ############################
                                     ############################
-                                    print("protocol 8 - SolarMAX received")
+                                    #print("protocol 8 or 9 - SolarMAX received")
+                                    print("protocol "+str(SOLARMAXPROTOCOL)+ " SolarMAX received")
                                     ############################
                                     ############################
                                     ############################
@@ -182,10 +187,10 @@ def readWXLink(block1, block2, stringblock1, stringblock2, block1_orig, block2_o
                 		    SolarMaxloadVoltage = struct.unpack('f', str(block1[21:25]))[0]
 
                 		    SolarMaxbatteryVoltage = struct.unpack('f', str(block2[1:5]))[0]
-                		    SolarMaxbatteryCurrent = struct.unpack('f', str(block2[5:9]))[0]
+                		    SolarMaxbatteryCurrent = -struct.unpack('f', str(block2[5:9]))[0]
                 		    SolarMaxloadCurrent = struct.unpack('f', str(block2[9:13]))[0]
                 		    SolarMaxsolarPanelVoltage = struct.unpack('f', str(block2[13:17]))[0]
-                		    SolarMaxsolarPanelCurrent = struct.unpack('f', str(block2[17:21]))[0]
+                		    SolarMaxsolarPanelCurrent = -struct.unpack('f', str(block2[17:21]))[0]
     
 		                    SolarMaxbatteryPower = SolarMaxbatteryVoltage * (SolarMaxbatteryCurrent/1000)
     
@@ -223,13 +228,14 @@ def readWXLink(block1, block2, stringblock1, stringblock2, block1_orig, block2_o
                 		    # message ID
                 		    MessageID = struct.unpack('l', str(block2[25:29]))[0]
                 		    print "SolarMax Message ID %i" % MessageID
-    
                                     if (config.SolarMAX_Present == True):
-                                        if (config.USEBLYNK):
-                                            if (config.WXLink_Data_Fresh == True):
-                                                updateBlynk.blynkStatusTerminalUpdate("SolarMAX ID# %d received"%config.WXLink_LastMessageID)
+                                         if (config.USEBLYNK):
+                                             if (config.WXLink_Data_Fresh == True):
+                                                 updateBlynk.blynkStatusTerminalUpdate("SolarMAX ID# %d received"%config.WXLink_LastMessageID)
+ 
 
-                                if ((protocol_ID == 3) or (protocol_ID == 8)):
+                                #if ((protocol_ID == 3) or (protocol_ID == 8) or (protocal_ID == 9)):
+                                if ((protocol_ID == 3) or (protocol_ID == SOLARMAXPROTOCOL) ):
                                         pass
                                 else:
                                     if (config.SWDEBUG):

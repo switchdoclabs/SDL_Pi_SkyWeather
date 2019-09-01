@@ -126,3 +126,4 @@ GPIO_Pin_PowerDrive_Sig1 = 5
 GPIO_Pin_PowerDrive_Sig2 = 5     # To avoid stepping on GPIO 6 
 
 WATCHDOGTRIGGER = 4
+

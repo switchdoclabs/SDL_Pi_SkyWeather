@@ -1,16 +1,17 @@
-SkyWeather Libraries and Examples for Raspberry Pi Solar Powered Weather Station
+SkyWeather Libraries and Examples for Raspberry Pi Solar Powered Weather Station<BR>
 
-Supports SwitchDoc Labs WeatherRack PiWeather Board 
+Supports SwitchDoc Labs WeatherRack PiWeather Board <BR> 
 
-All documentation is on:
+All documentation is on:<BR>
 
 https://shop.switchdoc.com/products/skyweather-raspberry-pi-based-weather-station-kit-for-the-cloud
 
-Version V046  - Minor Bug release (matplotlib, SolarMAX, blynk)
+Version 047 - Fixed to Camera Exposure, Minor tweak to WeatherSTEM Interface and SolarMAX (added Version)<BR>
 
-http://www.switchdoc.com/
+http://www.switchdoc.com/<BR>
 
-August 19, 2019: Version 046 - Minor Bug release (matplotlib, SolarMAX, blynk)
+September 1, 2019: Version 047 - Fixed to Camera Exposure, Minor tweak to WeatherSTEM Interface and SolarMAX (added Version)<BR>
+August 19, 2019: Version 046 - Minor Bug release (matplotlib, SolarMAX, blynk)<BR>
 August 14, 2019: Version 045 - Camera Debug Support - SolarMAX support - Must update conflocal.py<BR>
 August 12, 2019: Version 044 - Camera Debug Support - Overexposure problem<BR>
 August 8, 2019:  Version 043 - Improved AM2315 Detection, SQL Structure Fixed, time and date changed, debug for overexposure <BR>
