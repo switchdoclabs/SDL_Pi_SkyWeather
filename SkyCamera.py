@@ -382,13 +382,6 @@ def sendSkyWeather():
                         "units" : "%"
 
 
-		},
-		{
-			"name":"SkyWeatherVersion",
-			"value": config.SWVERSION,
-                        "units" : ""
-
-
 		}
 		
 	],
