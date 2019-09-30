@@ -14,7 +14,7 @@ try:
 except ImportError:
 	import config
 
-config.SWVERSION = "047"
+config.SWVERSION = "048"
 
 
 import sys
@@ -865,14 +865,15 @@ def sampleWeather():
          	tca9545.write_control_register(TCA9545_CONFIG_BUS0)
 	SDL_INTERRUPT_CLICKS = 1
 
-	if (config.WXLink_Present == False):
+	if ((config.WXLink_Present == False) or ((config.SolarMAX_Present == True) and (config.WXLink_Present == True) and (config.Dual_MAX_WXLink == False))):
  		currentWindSpeed = weatherStation.current_wind_speed()
   		currentWindGust = weatherStation.get_wind_gust()
   		totalRain = totalRain + weatherStation.get_current_rain_total()/SDL_INTERRUPT_CLICKS
 		if ((config.ADS1015_Present == True) or (config.ADS1115_Present == True)):
 			currentWindDirection = weatherStation.current_wind_direction()
 			currentWindDirectionVoltage = weatherStation.current_wind_direction_voltage()
-	else:
+
+	if (config.WXLink_Present == True):
 
 		# WXLink Data Gathering
                 #pay attention to semaphore in case new block is coming in
@@ -926,18 +927,19 @@ def sampleWeather():
                                 pass # variable setting done in readLoRa
 
 
-		else:
+		else:  #if (len(returnList) > 0):
                     if (config.WXLink_Present == True):
-			currentWindSpeed = state.ScurrentWindSpeed  
-  			currentWindGust = 0.0 # not supported
-  			totalRain = state.currentTotalRain
-			currentWindDirection = state.ScurrentWindDirection
-			currentWindDirectionVoltage = 0.0 # not supported
-
-    			outsideTemperature = state.currentOutsideTemperature
-    			outsideHumidity = state.currentOutsideHumidity
-			# checks for issue on startup
-			if ((len(state.block1) == 0) or (len(state.block2) == 0)):
+	                if ((config.Dual_MAX_WXLink == True) or (config.SolarMAX_Present == False)):
+			    currentWindSpeed = state.ScurrentWindSpeed  
+  			    currentWindGust = 0.0 # not supported
+  			    totalRain = state.currentTotalRain
+			    currentWindDirection = state.ScurrentWindDirection
+			    currentWindDirectionVoltage = 0.0 # not supported
+    
+    			    outsideTemperature = state.currentOutsideTemperature
+    			    outsideHumidity = state.currentOutsideHumidity
+			    # checks for issue on startup
+			    if ((len(state.block1) == 0) or (len(state.block2) == 0)):
 
 				# skip update if bad
 				currentWindSpeed = 0.0 

@@ -6,10 +6,11 @@ All documentation is on:<BR>
 
 https://shop.switchdoc.com/products/skyweather-raspberry-pi-based-weather-station-kit-for-the-cloud
 
-Version 047 - Fixed to Camera Exposure, Minor tweak to WeatherSTEM Interface and SolarMAX (added Version)<BR>
+September 29, 2019: Version 048 - Fixed SolarMAX bug <BR>
 
 http://www.switchdoc.com/<BR>
 
+September 29, 2019: Version 048 - Fixed SolarMAX bug <BR>
 September 1, 2019: Version 047 - Fixed to Camera Exposure, Minor tweak to WeatherSTEM Interface and SolarMAX (added Version)<BR>
 August 19, 2019: Version 046 - Minor Bug release (matplotlib, SolarMAX, blynk)<BR>
 August 14, 2019: Version 045 - Camera Debug Support - SolarMAX support - Must update conflocal.py<BR>
