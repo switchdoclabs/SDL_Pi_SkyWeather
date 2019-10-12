@@ -18,7 +18,8 @@ try:
 except ImportError:
         import config
 
-# change this if you have changed the SolarMAX protocol number
+
+# change this if you have changed the SolarMAX protocol number 8 is for SolarMAX Lipo and 10 is for SolarMAX LeadAcid
 
 SOLARMAXPROTOCOL = 8
 # read WXLink and return list to set variables
@@ -153,7 +154,7 @@ def readWXLink(block1, block2, stringblock1, stringblock2, block1_orig, block2_o
 					        print "WXLink_Data_Fresh set to True"
                                 #
                                 # use protocol 8 if SolarMAX_Present == True 
-                                #if (((protocol_ID == 8) or (protocol_ID == 9))and (config.SolarMAX_Present)):    # 8 is the WXLink Protocol
+                                #if (((protocol_ID == 8) or (protocol_ID == 10))and (config.SolarMAX_Present)):    # 8 is the WXLink Protocol
                                 if ((protocol_ID == SOLARMAXPROTOCOL) and (config.SolarMAX_Present)):    # 8 is the WXLink Protocol
                                     ############################
                                     ############################
@@ -234,7 +235,7 @@ def readWXLink(block1, block2, stringblock1, stringblock2, block1_orig, block2_o
                                                  updateBlynk.blynkStatusTerminalUpdate("SolarMAX ID# %d received"%config.WXLink_LastMessageID)
  
 
-                                #if ((protocol_ID == 3) or (protocol_ID == 8) or (protocal_ID == 9)):
+                                #if ((protocol_ID == 3) or (protocol_ID == 8) or (protocol_ID == 10)):
                                 if ((protocol_ID == 3) or (protocol_ID == SOLARMAXPROTOCOL) ):
                                         pass
                                 else:

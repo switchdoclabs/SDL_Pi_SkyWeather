@@ -263,12 +263,6 @@ def blynkStateUpdate():
         put_body = json.dumps([val])
         r = requests.put(config.BLYNK_URL+config.BLYNK_AUTH+'/update/V4', data=put_body, headers=put_header)
 
-        #Sunlight 
-        val = "{0:0.0f}".format(state.currentSunlightVisible) 
-        #print ("Sunlight Val = ", state.currentSunlightVisible)
-        put_body = json.dumps([val])
-        r = requests.put(config.BLYNK_URL+config.BLYNK_AUTH+'/update/V60', data=put_body, headers=put_header)
-
         #barometric Pressure 
         if (state.EnglishMetric == 1):
             tval = "{0:0.2f}hPa".format(state.currentSeaLevel) 

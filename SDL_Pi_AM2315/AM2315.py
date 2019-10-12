@@ -133,7 +133,7 @@ class AM2315:
                 except:
                     if (AM2315DEBUG == True):
                         print "Wake Byte Fail"
-                    time.sleep(2.000)                    
+                    #time.sleep(2.000)                    
                     self._device.write_byte_data(AM2315_I2CADDR, AM2315_READREG, 0x00)
                     time.sleep(0.001)
                     #self._device.write_byte_data(AM2315_I2CADDR, AM2315_READREG, 0x00)

@@ -6,10 +6,11 @@ All documentation is on:<BR>
 
 https://shop.switchdoc.com/products/skyweather-raspberry-pi-based-weather-station-kit-for-the-cloud
 
-September 29, 2019: Version 048 - Fixed SolarMAX bug <BR>
+October 12, 2019: Version 049 - Fixed BlynkBug / AM2315 Bug <BR>
 
 http://www.switchdoc.com/<BR>
 
+October 12, 2019:   Version 049 - Fixed BlynkBug / AM2315 Bug <BR>
 September 29, 2019: Version 048 - Fixed SolarMAX bug <BR>
 September 1, 2019: Version 047 - Fixed to Camera Exposure, Minor tweak to WeatherSTEM Interface and SolarMAX (added Version)<BR>
 August 19, 2019: Version 046 - Minor Bug release (matplotlib, SolarMAX, blynk)<BR>
