@@ -1756,9 +1756,10 @@ sampleAndDisplay()
 # test SkyWeather
 
 print ("taking SkyPicture")
-SkyCamera.takeSkyPicture()
-#print ("sending SkyCamera")
-#SkyCamera.sendSkyWeather()
+if(config.Camera_Present):
+    SkyCamera.takeSkyPicture()
+    #print ("sending SkyCamera")
+    #SkyCamera.sendSkyWeather()
 
 # Set up scheduler
 

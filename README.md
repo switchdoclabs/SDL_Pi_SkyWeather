@@ -6,7 +6,8 @@ All documentation is on:<BR>
 
 https://shop.switchdoc.com/products/skyweather-raspberry-pi-based-weather-station-kit-for-the-cloud
 
-October 12, 2019: Version 049 - Fixed BlynkBug / AM2315 Bug <BR>
+October 14, 2019: Version 050 - Fixed Camerar Detection on Buster<BR>
+
 
 http://www.switchdoc.com/<BR>
 
