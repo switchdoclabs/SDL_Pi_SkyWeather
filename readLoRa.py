@@ -235,7 +235,7 @@ def readWXLink(block1, block2, stringblock1, stringblock2, block1_orig, block2_o
                 		    print "SolarMax Message ID %i" % MessageID
                                     if (config.USEBLYNK):
                                         entry = time.strftime("%Y-%m-%d %H:%M:%S")+": %i \n" % (MessageID)
-                                        updateBlynbk.blynkSolarMAXLine(entry)
+                                        updateBlynk.blynkSolarMAXLine(entry)
                                      
                                     if (config.SolarMAX_Present == True):
                                         if(config.SWDEBUG):
