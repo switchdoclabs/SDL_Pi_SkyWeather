@@ -76,6 +76,7 @@ batteryPower = 0
 solarPower = 0
 loadPower = 0
 batteryCharge = 0
+SolarMAXLastReceived = "None"
 
 # WXLink Values
 WXbatteryVoltage = 0
@@ -176,6 +177,7 @@ def printState():
     print "loadPower", loadPower
     print "batteryCharge", batteryCharge
 
+    print "SolarMAX Last Received", SolarMAXLastReceived
     print "-------------"
 
     print "-------------"

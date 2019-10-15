@@ -101,6 +101,21 @@ def blynkStatusTerminalUpdate(entry):
         print "exception in blynkTerminalUpdate"
         print (e)
         return 0
+
+def blynkSolarMAXLine(entry):
+    try:
+        put_header={"Content-Type": "application/json"}
+
+        put_body = json.dumps([entry])
+        if (DEBUGBLYNK):
+            print "blynkSolarMAXUpdate:Pre:put_body:",put_body
+        r = requests.put(config.BLYNK_URL+config.BLYNK_AUTH+'/update/V75', data=put_body, headers=put_header)
+        if (DEBUGBLYNK):
+            print "blynkSolarMAXUpdate:POST:r.status_code:",r.status_code
+    except Exception as e:
+        print "exception in blynkSolarMAXUpdate"
+        print (e)
+        return 0
     
 def blynkSolarTerminalUpdate(entry):
     try:

@@ -233,9 +233,13 @@ def readWXLink(block1, block2, stringblock1, stringblock2, block1_orig, block2_o
                 		    # message ID
                 		    MessageID = struct.unpack('l', str(block2[25:29]))[0]
                 		    print "SolarMax Message ID %i" % MessageID
+                                    if (config.USEBLYNK):
+                                        entry = time.strftime("%Y-%m-%d %H:%M:%S")+": %i \n" % (MessageID)
+                                        updateBlynbk.blynkSolarMAXLine(entry)
+                                     
                                     if (config.SolarMAX_Present == True):
-                                         if (config.USEBLYNK):
-                                             if (config.WXLink_Data_Fresh == True):
+                                        if(config.SWDEBUG):
+                                            if (config.USEBLYNK):
                                                  updateBlynk.blynkStatusTerminalUpdate("SolarMAX ID# %d received"%config.WXLink_LastMessageID)
  
 
