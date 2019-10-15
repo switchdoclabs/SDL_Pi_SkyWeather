@@ -107,7 +107,7 @@ def returnPercentLeftInBattery(currentVoltage, maxVolt):
 
     if(config.SolarMAX_Type == "LEAD"):
 
-        returnPercent = ((currentVoltage - 10.50)/(1.5)) * 100.00
+        returnPercent = ((currentVoltage - 10.50)/(2.4)) * 100.00
         if (returnPercent > 100.00):
             returnPercent = 100.0
         if (returnPercent < 0.0):
