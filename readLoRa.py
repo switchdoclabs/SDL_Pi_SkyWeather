@@ -22,6 +22,10 @@ except ImportError:
 # change this if you have changed the SolarMAX protocol number 8 is for SolarMAX Lipo and 10 is for SolarMAX LeadAcid
 
 SOLARMAXPROTOCOL = 8
+
+if (config.SolarMAX_Type == "LEAD"):
+    SOLARMAXPROTOCOL = 10
+
 # read WXLink and return list to set variables
 crcCalc = crcpython2.CRCCCITT(version='XModem')
 
@@ -276,8 +280,9 @@ def readWXLink(block1, block2, stringblock1, stringblock2, block1_orig, block2_o
                     returnList.append(protocol_ID)
 
 		return returnList
-     except:
+     except Exception as e:
          print("LoRa Packet Decode Failure - probably short block receive")
+         print("e=",e)
          return []
 
 def readRawWXLink():

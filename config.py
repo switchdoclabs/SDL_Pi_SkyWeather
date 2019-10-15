@@ -42,6 +42,10 @@ runLEDs = False
 SolarMAX_Present = False
 Dual_MAX_WXLink = False
 
+# SolarMAX_Type = "LEAD" for SolarMAX Lead Acid
+# SolarMAX_Type = "LIPO" for SolarMAX LiPo
+SolarMAX_Type = ""
+
 # WeatherSTEM configuration
 
 USEWEATHERSTEM = False

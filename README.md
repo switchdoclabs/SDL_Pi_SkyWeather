@@ -6,11 +6,23 @@ All documentation is on:<BR>
 
 https://shop.switchdoc.com/products/skyweather-raspberry-pi-based-weather-station-kit-for-the-cloud
 
-October 14, 2019: Version 050 - Fixed Camerar Detection on Buster<BR>
+October 15, 2019: Version 051 - Added support for SolarMAX Lead Acid - Must update conflocal.py if used<BR>
 
+<pre>
+@@ -42,6 +42,10 @@ runLEDs = False
+ SolarMAX_Present = False
+ Dual_MAX_WXLink = False
+ 
++# SolarMAX_Type = "LEAD" for SolarMAX Lead Acid
++# SolarMAX_Type = "LIPO" for SolarMAX LiPo
++SolarMAX_Type = ""
++
+
+</pre>
 
 http://www.switchdoc.com/<BR>
 
+October 14, 2019: Version 050 - Fixed Camera Detection on Buster<BR>
 October 12, 2019:   Version 049 - Fixed BlynkBug / AM2315 Bug <BR>
 September 29, 2019: Version 048 - Fixed SolarMAX bug <BR>
 September 1, 2019: Version 047 - Fixed to Camera Exposure, Minor tweak to WeatherSTEM Interface and SolarMAX (added Version)<BR>
