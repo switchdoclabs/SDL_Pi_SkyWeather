@@ -174,15 +174,15 @@ def readWXLink(block1, block2, stringblock1, stringblock2, block1_orig, block2_o
 
 
                 		    # now do the inside Temperature in the SolarMAX
-                		    SolarMaxInsideTemperature = struct.unpack('f', str(block1[25:29]))[0]
+                		    state.SolarMaxInsideTemperature = struct.unpack('f', str(block1[25:29]))[0]
                                     if (config.SWDEBUG):
                 	                print "SMOTFloat=%x%x%x%x" %(block1[25], block1[26], block1[27], block1[28])
 				    elements = [block1[29], block1[30], block1[31], block2[0]]
                 		    outHByte = bytearray(elements)
-                		    SolarMaxInsideHumidity = struct.unpack('f', str(outHByte))[0]
+                		    state.SolarMaxInsideHumidity = struct.unpack('f', str(outHByte))[0]
                                     if (config.SWDEBUG):
-                		        print "ITemperature from SolarMAX temperature: %0.1fC" % SolarMaxInsideTemperature
-                		        print "IHumidity from SolarMAX humidity: %0.1f%%" % SolarMaxInsideHumidity
+                		        print "ITemperature from SolarMAX temperature: %0.1fC" % state.SolarMaxInsideTemperature
+                		        print "IHumidity from SolarMAX humidity: %0.1f%%" % state.SolarMaxInsideHumidity
 
 
 

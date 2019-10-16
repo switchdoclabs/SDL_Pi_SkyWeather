@@ -90,6 +90,8 @@ WXsolarPower = 0
 WXloadPower = 0
 WXbatteryCharge = 0
 
+SolarMaxInsideTemperature = 0.0
+SolarMaxInsideHumidity = 0.0
 # Fan State
 
 fanState = False

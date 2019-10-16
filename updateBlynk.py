@@ -331,11 +331,23 @@ def blynkStateUpdate():
         val = "{0:0.1f}W".format(state.loadPower) 
         put_body = json.dumps([val])
         r = requests.put(config.BLYNK_URL+config.BLYNK_AUTH+'/update/V62', data=put_body, headers=put_header)
+
+        if (config.SolarMAX_Present == True):
+        
+            val = util.returnTemperatureCF(state.SolarMaxInsideTemperature)
+            tval = "{0:0.1f} ".format(val) + util.returnTemperatureCFUnit()
+            put_body = json.dumps([tval])
+            r = requests.put(config.BLYNK_URL+config.BLYNK_AUTH+'/update/V76', data=put_body, headers=put_header)
+
+            val = "{0:0.1f}%".format(state.SolarMaxInsideHumidity) 
+            put_body = json.dumps([val])
+            r = requests.put(config.BLYNK_URL+config.BLYNK_AUTH+'/update/V77', data=put_body, headers=put_header)
+
+        
         
         val = "{0:0.1f}".format(state.batteryCharge) 
         put_body = json.dumps([val])
         r = requests.put(config.BLYNK_URL+config.BLYNK_AUTH+'/update/V56', data=put_body, headers=put_header)
-        
         
         val = "{0:0.1f}".format(state.batteryCharge) 
         put_body = json.dumps([val])
