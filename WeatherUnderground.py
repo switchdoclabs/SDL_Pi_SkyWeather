@@ -52,7 +52,7 @@ def sendWeatherUndergroundData( as3935LightningCount, as3935, as3935LastInterrup
 
 	print "myURL=", myURL
 	#send it
-	r = requests.get("https://weatherstation.wunderground.com/weatherstation/updateweatherstation.php", params=myURL)
+	r = requests.get("https://rtupdate.wunderground.com/weatherstation/updateweatherstation.php", params=myURL)
 
 	print(r.url)
 	print(r.text)

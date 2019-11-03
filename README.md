@@ -6,8 +6,12 @@ All documentation is on:<BR>
 
 https://shop.switchdoc.com/products/skyweather-raspberry-pi-based-weather-station-kit-for-the-cloud
 
-October 15, 2019: Version 051 - Added support for SolarMAX Lead Acid - Must update conflocal.py if used<BR>
+November 2, 2019: Version 052 - Fixed WeatherUnderground URL and Added more debug for LoRa WXLink 
 
+http://www.switchdoc.com/<BR>
+
+
+October 15, 2019: Version 051 - Added support for SolarMAX Lead Acid - Must update conflocal.py if used<BR>
 <pre>
 @@ -42,6 +42,10 @@ runLEDs = False
  SolarMAX_Present = False
@@ -18,10 +22,7 @@ October 15, 2019: Version 051 - Added support for SolarMAX Lead Acid - Must upda
 +SolarMAX_Type = ""
 +
 
-</pre>
-
-http://www.switchdoc.com/<BR>
-
+</pre><BR>
 October 14, 2019: Version 050 - Fixed Camera Detection on Buster<BR>
 October 12, 2019:   Version 049 - Fixed BlynkBug / AM2315 Bug <BR>
 September 29, 2019: Version 048 - Fixed SolarMAX bug <BR>

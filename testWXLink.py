@@ -65,6 +65,10 @@ if (config.WXLink_Present):
 
     while True:
         readLoRa.readRawWXLink()
+        if (len(state.block1) > 3):
+            rawProtocolID = state.block1[2]
+
+            print(">>>>>>>>>>>>protocolblock=",rawProtocolID)
 
         readLoRa.readWXLink(state.block1, state.block2, state.stringblock1, state.stringblock2, state.block1_orig, state.block2_orig)
 
