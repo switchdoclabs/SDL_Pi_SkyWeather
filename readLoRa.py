@@ -21,7 +21,11 @@ except ImportError:
 
 # change this if you have changed the SolarMAX protocol number 8 is for SolarMAX Lipo and 10 is for SolarMAX LeadAcid
 
-SOLARMAXPROTOCOL = 8
+if(config.SolarMAX_Type == "LEAD"):
+    SOLARMAXPROTOCOL = 10
+else:
+    SOLARMAXPROTOCOL = 8
+
 # read WXLink and return list to set variables
 crcCalc = crcpython2.CRCCCITT(version='XModem')
 
@@ -154,8 +158,8 @@ def readWXLink(block1, block2, stringblock1, stringblock2, block1_orig, block2_o
 					        print "WXLink_Data_Fresh set to True"
                                 #
                                 # use protocol 8 if SolarMAX_Present == True 
-                                if (((protocol_ID == 8) or (protocol_ID == 10))and (config.SolarMAX_Present)):    # 8 is the WXLink Protocol
-                                #if ((protocol_ID == SOLARMAXPROTOCOL) and (config.SolarMAX_Present)):    # 8 is the WXLink Protocol
+                                #if (((protocol_ID == 8) or (protocol_ID == 10))and (config.SolarMAX_Present)):    
+                                if ((protocol_ID == SOLARMAXPROTOCOL) and (config.SolarMAX_Present)):    # 3 is the WXLink Protocol
                                     ############################
                                     ############################
                                     ############################
@@ -236,6 +240,7 @@ def readWXLink(block1, block2, stringblock1, stringblock2, block1_orig, block2_o
                                                  if (config.SWDEBUG):
                                                     updateBlynk.blynkStatusTerminalUpdate("SolarMAX ID# %d received"%config.WXLink_LastMessageID)
                                              entry = time.strftime("%Y-%m-%d %H:%M:%S")+": %i \n" % (MessageID)
+                                             state.SolarMAXLastReceived = entry
                                              updateBlynk.blynkSolarMAXLine(entry,protocol_ID )
                                      
  
@@ -245,7 +250,7 @@ def readWXLink(block1, block2, stringblock1, stringblock2, block1_orig, block2_o
                                         pass
                                 else:
                                     if (config.SWDEBUG):
-				        print "unknown protocol received.  Protocol = ", protocol_ID
+				        print "unknown or non-configured protocol received.  Protocol = ", protocol_ID
 				    return []
 
 

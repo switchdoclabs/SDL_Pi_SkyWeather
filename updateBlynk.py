@@ -102,7 +102,8 @@ def blynkStatusTerminalUpdate(entry):
         print (e)
         return 0
 
-def blynkSolarMAXLine(entry):
+
+def blynkSolarMAXLine(entry, protocol):
     try:
         put_header={"Content-Type": "application/json"}
 
