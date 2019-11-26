@@ -6,11 +6,13 @@ All documentation is on:<BR>
 
 https://shop.switchdoc.com/products/skyweather-raspberry-pi-based-weather-station-kit-for-the-cloud
 
-November 2, 2019: Version 052 - Fixed WeatherUnderground URL and Added more debug for LoRa WXLink 
+November 26, 2019: Version 053 - Update Blynk with latest SolarMAX Packet Status
+
 
 http://www.switchdoc.com/<BR>
 
 
+November 2, 2019: Version 052 - Fixed WeatherUnderground URL and Added more debug for LoRa WXLink 
 October 15, 2019: Version 051 - Added support for SolarMAX Lead Acid - Must update conflocal.py if used<BR>
 <pre>
 @@ -42,6 +42,10 @@ runLEDs = False
