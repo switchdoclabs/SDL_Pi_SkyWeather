@@ -216,7 +216,8 @@ def readWXLink(block1, block2, stringblock1, stringblock2, block1_orig, block2_o
 		                    state.solarPower = SolarMaxsolarPower
 		                    state.loadPower = SolarMaxloadPower
 		                    state.batteryCharge = SolarMaxbatteryCharge
-
+                                    state.SolarMaxInsideTemperature = SolarMaxInsideTemperature 
+                                    state.SolarMaxInsideHumidity = SolarMaxInsideHumidity 
 					
                 		    auxA = struct.unpack('f', str(block2[21:25]))[0]
                                     # now set state variables

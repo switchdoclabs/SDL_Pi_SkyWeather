@@ -179,6 +179,8 @@ def printState():
     print "loadPower", loadPower
     print "batteryCharge", batteryCharge
 
+    print "SolarMAX Inside Temperature", SolarMaxInsideTemperature
+    print "SolarMAX Inside Humidity", SolarMaxInsideHumidity
     print "SolarMAX Last Received", SolarMAXLastReceived
     print "-------------"
 
