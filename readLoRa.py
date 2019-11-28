@@ -10,7 +10,7 @@ import struct
 import util
 
 import crcpython2
-
+import traceback
 import updateBlynk
 
 try:
@@ -263,8 +263,7 @@ def readWXLink(block1, block2, stringblock1, stringblock2, block1_orig, block2_o
 			return []
 	
 		# return list
-
-                if (protocol_ID == 3):  # WXlink
+                if ((protocol_ID == 3) and ((config.SolarMAX_Present == False) or (config.Dual_MAX_WXLink == True))):    # 3 is the WXLink Protocol
 		    returnList = []
                     returnList.append(protocol_ID)
 		    returnList.append(block1_orig) 
@@ -288,6 +287,8 @@ def readWXLink(block1, block2, stringblock1, stringblock2, block1_orig, block2_o
 
 		return returnList
      except Exception as e:
+         if (config.SWDEBUG):
+            print(traceback.format_exc()) 
          print("LoRa Packet Decode Failure - probably short block receive")
          print("e=",e)
          return []

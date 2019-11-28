@@ -105,7 +105,7 @@ def takeSkyPicture():
 
     except:
             if (config.SWDEBUG):
-                traceback.print_exc()
+                print(traceback.format_exc()) 
                 print ("--------------------")
                 print ("SkyCam Picture Failed")
                 print ("--------------------")
