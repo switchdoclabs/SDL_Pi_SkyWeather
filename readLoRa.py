@@ -18,6 +18,7 @@ try:
 except ImportError:
         import config
 
+WXLINKPROTOCOLID = 3
 
 # change this if you have changed the SolarMAX protocol number 8 is for SolarMAX Lipo and 10 is for SolarMAX LeadAcid
 
@@ -77,9 +78,9 @@ def readWXLink(block1, block2, stringblock1, stringblock2, block1_orig, block2_o
 
                                 # if protocol_ID == 3, then 
                                 # use if:  SolarMAX_Present == False or Dual_MAX_WXLink == True
-                                if ((protocol_ID == 3) and ((config.SolarMAX_Present == False) or (config.Dual_MAX_WXLink == True))):    # 3 is the WXLink Protocol
+                                if ((protocol_ID == WXLINKPROTOCOLID) and ((config.SolarMAX_Present == False) or (config.Dual_MAX_WXLink == True))):    # 3 is the WXLink Protocol
 
-                                    print("protocol 3 - WXLink received")
+                                    print("protocol %d - WXLink received "% WXLINKPROTOCOLID)
                 		    currentWindSpeed = struct.unpack('f', str(block1[9:13]))[0] 
 
                 		    currentWindGust = 0.0   # not implemented in Solar WXLink version
@@ -246,8 +247,8 @@ def readWXLink(block1, block2, stringblock1, stringblock2, block1_orig, block2_o
                                      
  
 
-                                if ((protocol_ID == 3) or (protocol_ID == 8) or (protocol_ID == 10)):
-                                #if ((protocol_ID == 3) or (protocol_ID == SOLARMAXPROTOCOL) ):
+                                if ((protocol_ID == WXLINKPROTOCOLID) or (protocol_ID == 8) or (protocol_ID == 10)):
+                                #if ((protocol_ID == WXLINKPROTOCOLID) or (protocol_ID == SOLARMAXPROTOCOL) ):
                                         pass
                                 else:
                                     if (config.SWDEBUG):
@@ -263,7 +264,7 @@ def readWXLink(block1, block2, stringblock1, stringblock2, block1_orig, block2_o
 			return []
 	
 		# return list
-                if ((protocol_ID == 3) and ((config.SolarMAX_Present == False) or (config.Dual_MAX_WXLink == True))):    # 3 is the WXLink Protocol
+                if ((protocol_ID == WXLINKPROTOCOLID) and ((config.SolarMAX_Present == False) or (config.Dual_MAX_WXLink == True))):    # 3 is the WXLink Protocol
 		    returnList = []
                     returnList.append(protocol_ID)
 		    returnList.append(block1_orig) 
