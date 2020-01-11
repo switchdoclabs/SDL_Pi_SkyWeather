@@ -6,12 +6,13 @@ All documentation is on:<BR>
 
 https://shop.switchdoc.com/products/skyweather-raspberry-pi-based-weather-station-kit-for-the-cloud
 
-November 27, 2019: Version 054 - Fixed reporting of SolarMAX inside temperature/humidity
+December 15, 2019: Version 055 - MySQL SolarMAX Fixes
 
 
 http://www.switchdoc.com/<BR>
 
 
+November 27, 2019: Version 054 - Fixed reporting of SolarMAX inside temperature/humidity
 November 26, 2019: Version 053 - Update Blynk with latest SolarMAX Packet Status
 November 2, 2019: Version 052 - Fixed WeatherUnderground URL and Added more debug for LoRa WXLink 
 October 15, 2019: Version 051 - Added support for SolarMAX Lead Acid - Must update conflocal.py if used<BR>
