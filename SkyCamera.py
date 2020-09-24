@@ -38,7 +38,7 @@ def takeSkyPicture():
 
     camera.exposure_mode = "auto"
     try:
-        camera.rotation = 180
+        camera.rotation = config.CAMERA_ROTATION
         #camera.rotation = 270
         camera.resolution = (1920, 1080)
         # Camera warm-up time
