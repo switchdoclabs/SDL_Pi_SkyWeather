@@ -211,8 +211,8 @@ def togglePower(GroveSavePin):
 
 import SDL_Pi_GrovePowerDrive
 
-TEMPFANTURNON = 37.0
-TEMPFANTURNOFF = 34.0
+TEMPFANTURNON = config.FAN_ON_TEMP
+TEMPFANTURNOFF = config.FAN_OFF_TEMP
 
 myPowerDrive = SDL_Pi_GrovePowerDrive.SDL_Pi_GrovePowerDrive(config.GPIO_Pin_PowerDrive_Sig1, config.GPIO_Pin_PowerDrive_Sig2, False, False)
 
